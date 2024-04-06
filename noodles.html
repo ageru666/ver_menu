@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Основні страви - Локшина</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+    .card-img-top {
+        width: 100%; 
+        height: 200px; 
+        object-fit: cover; 
+    }
+    .container h2 {
+        margin-bottom: 20px; 
+        margin-top: 10px;
+    }
+    .card {
+        margin-bottom: 20px; 
+    }
+</style>
+
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Основні страви - Локшина</h2>
+        <div id="noodles-container" class="row"></div>
+    </div>
+
+    <script>
+        fetch('/noodles')
+            .then(response => response.json())
+            .then(noodles => {
+                const container = document.getElementById('noodles-container');
+                noodles.forEach(noodle => {
+                    const card = `
+                        <div class="col-md-4">
+                            <div class="card">
+                                <img src="${noodle.image}" class="card-img-top" alt="${noodle.name}">
+                                <div class="card-body">
+                                    <h5 class="card-title">${noodle.name}</h5>
+                                    <p class="card-text">${noodle.price}</p>
+                                    <p class="card-text">${noodle.weight}</p>
+                                    <p class="card-text">${noodle.ingredients}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    container.innerHTML += card;
+                });
+            });
+    </script>
+    
+    <script src="/js/footer.js"></script>
+    <script src="/js/header.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
