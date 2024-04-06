@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Салати</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+    .card-img-top {
+        width: 100%; 
+        height: 200px; 
+        object-fit: cover; 
+    }
+    .container h2 {
+        margin-bottom: 20px;
+        margin-top: 10px;
+    }
+    .card {
+        margin-bottom: 20px;
+    }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Салати</h2>
+        <div id="salads-container" class="row"></div>
+    </div>
+
+    <script>
+        fetch('/salads')
+            .then(response => response.json())
+            .then(salads => {
+                const container = document.getElementById('salads-container');
+                salads.forEach(salad => {
+                    const card = `
+                        <div class="col-md-4">
+                            <div class="card">
+                                <img src="${salad.image}" class="card-img-top" alt="${salad.name}">
+                                <div class="card-body">
+                                    <h5 class="card-title">${salad.name}</h5>
+                                    <p class="card-text">${salad.price}</p>
+                                    <p class="card-text"> ${salad.weight}</p>
+                                    <p class="card-text">${salad.ingredients}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    container.innerHTML += card;
+                });
+            });
+    </script>
+    <script src="/js/footer.js"></script>
+    <script src="/js/header.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,31 +1,220 @@
-
 const express = require('express');
-const app = express();
+const mongoose = require('mongoose');
 const path = require('path');
-
+const app = express();
 const PORT = 3000;
 
-const noodles = [
-    { id: 1, name: 'Локшина Удон з куркою', price: '150 грн', weight: '250г', ingredients: 'Удон, курка, овочі, соєвий соус', image: 'https://novosti24.kyiv.ua/wp-content/uploads/2023/07/recipe_f0caba4f-243a-4fe8-bed5-e04452bff4a0_w450.jpg' },
-    { id: 2, name: 'Локшина Соба з яловичиною', price: '170 грн', weight: '300г', ingredients: 'Соба, яловичина, овочі, соус теріякі', image: 'https://contrabanda.kiev.ua/media/catalog/product/cache/1/thumbnail/600x/17f82f742ffe127f42dca9de82fb58b1/f/i/file_5_3_1.jpg' },
-    { id: 3, name: 'Рамен з морепродуктами', price: '180 грн', weight: '350г', ingredients: 'Рамен, морепродукти, бульйон, яйце', image: 'https://yasensvit.ua/uploads/recipes/prev/5e5cfff6a6f50.jpg' },
-    { id: 4, name: 'Локшина з тофу та грибами', price: '130 грн', weight: '250г', ingredients: 'Локшина, тофу, гриби шіітаке, овочевий бульйон', image: 'https://picantecooking.com/pictures/2015-01/egg-noodles-stir-fry13-6404ce32b0376884159061.jpg' },
-    { id: 5, name: 'Локшина Хейзен з креветками', price: '190 грн', weight: '300г', ingredients: 'Локшина Хейзен, креветки, овочі, гострий соус', image: 'https://radiotrek.rv.ua/uploads/media/54/7a/547aaa3ff9d5535bde4132ec14a1bbff_orig.jpg' },
-    { id: 6, name: 'Локшина Карі з качкою', price: '200 грн', weight: '300г', ingredients: 'Локшина, качка, овочі, карі', image: 'https://shuba.life/static/content/thumbs/1200x630/f/37/s7arrm---c2000x1050x0sx182s-up--bc920b28d007fec239950a421b1ba37f.jpg' },
-    { id: 7, name: 'Вегетаріанська локшина', price: '120 грн', weight: '250г', ingredients: 'Локшина, асорті овочів, соєвий соус', image: 'https://shuba.life/static/content/thumbs/1905x884/5/ab/5q2wmo---c1905x884x50px50p-up--e9316cafc3058d5d4e0b82e3a201bab5.jpg' },
-    { id: 8, name: 'Локшина з волованом та грибами', price: '175 грн', weight: '300г', ingredients: 'Локшина, волован, гриби, кремовий соус', image: 'https://picantecooking.com/pictures/2020-03/soba-noodles-with-sesame8-6404dbb44c96f185413985.jpg' },
-    { id: 9, name: 'Локшина з морським гребінцем', price: '250 грн', weight: '350г', ingredients: 'Локшина, морські гребінці, овочі, соус устриць', image: 'https://tykami.com.ua/image/cache/catalog/news/paste-shrimp-and-scallops-4-896x588.jpg' }
-];
+// Подключение к MongoDB Atlas
+mongoose.connect('mongodb+srv://ageru:IhWl6T7j2Zx1EZ2e@cluster0.hbxe6dt.mongodb.net/restaurantMenu', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => console.log('MongoDB підключен'))
+.catch(err => console.error('Помилка підключення к MongoDB', err));
 
+const noodleSchema = new mongoose.Schema({
+  name: String,
+  price: String,
+  weight: String,
+  ingredients: String,
+  image: String
+});
+
+const saladSchema = new mongoose.Schema({
+  name: String,
+  price: String,
+  weight: String,
+  ingredients: String,
+  image: String
+});
+
+const soupSchema = new mongoose.Schema({
+  name: String,
+  price: String,
+  weight: String,
+  ingredients: String,
+  image: String
+});
+
+const appetizersSchema = new mongoose.Schema({
+  name: String,
+  price: String,
+  weight: String,
+  ingredients: String,
+  image: String
+});
+
+const cocktailSchema = new mongoose.Schema({
+  name: String, 
+  price: String, 
+  volume: String,
+  ingredients: String, 
+  image: String 
+});
+
+const beerSchema = new mongoose.Schema({
+  name: String, 
+  price: String, 
+  volume: String, 
+  image: String 
+});
+
+const wineSchema = new mongoose.Schema({
+  name: String, 
+  price: String, 
+  volume: String, 
+  image: String 
+});
+
+const spiritSchema = new mongoose.Schema({
+  name: String, 
+  price: String, 
+  volume: String, 
+  image: String 
+});
+
+const coffeeSchema = new mongoose.Schema({
+  name: String, 
+  price: String, 
+  volume: String, 
+  image: String 
+});
+
+
+const Cocktail = mongoose.model('Cocktail', cocktailSchema, 'cocktails');
+
+const Beer = mongoose.model('Beer', beerSchema, 'beer');
+
+const Wine = mongoose.model('Wine', wineSchema, 'wine');
+
+const Spirits = mongoose.model('Spirits', spiritSchema, 'spirits');
+
+const Coffee = mongoose.model('Coffee', coffeeSchema, 'coffee');
+
+const Noodle = mongoose.model('Noodle', noodleSchema, 'noodles');
+
+const Salad = mongoose.model('Salad', saladSchema, 'salads');
+
+const Soup = mongoose.model('Soup', soupSchema, 'soups');
+
+const Appetizer = mongoose.model('Appetizer', appetizersSchema, 'appetizers');
+
+app.use(express.json());
+
+app.use(express.static('public'));
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+  res.sendFile(path.join(__dirname, 'public', 'html', 'index.html'));
 });
 
-app.get('/noodles', (req, res) => {
+app.get('/drinks/:category', async (req, res) => {
+  const { category } = req.params;
+  let model;
+
+  switch (category) {
+    case 'cocktails':
+      model = Cocktail;
+      break;
+    case 'beer':
+      model = Beer; 
+      break;
+      case 'wine':
+      model = Wine; 
+      break;
+    case 'spirits':
+      model = Spirits; 
+      break;
+    case 'coffee':
+      model = Coffee; 
+      break;
+    default:
+      return res.status(404).send('Категорія не знайдена');
+  }
+
+  try {
+    const drinks = await model.find();
+    res.json(drinks);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+app.get('/noodles', async (req, res) => {
+  try {
+    const noodles = await Noodle.find();
     res.json(noodles);
+  } catch (error) {
+    res.status(500).send(error);
+  }
 });
 
+app.get('/salads', async (req, res) => {
+  try {
+    const salads = await Salad.find();
+    res.json(salads);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+app.get('/soups', async (req, res) => {
+  try {
+    const soups = await Soup.find();
+    res.json(soups);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+app.get('/appetizers', async (req, res) => {
+  try {
+    const appetizers = await Appetizer.find();
+    res.json(appetizers);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+
+app.post('/noodles', async (req, res) => {
+  const noodle = new Noodle(req.body);
+  try {
+    await noodle.save();
+    res.status(201).send(noodle);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+app.post('/salads', async (req, res) => {
+  const salad = new Salad(req.body);
+  try {
+    await salad.save();
+    res.status(201).send(salad);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+app.post('/soups', async (req, res) => {
+  const soup = new Soup(req.body);
+  try {
+    await soup.save();
+    res.status(201).send(soup);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+app.post('/appetizers', async (req, res) => {
+  const appetizer = new Appetizer(req.body);
+  try {
+    await appetizer.save();
+    res.status(201).send(appetizer);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
 
 app.listen(PORT, () => {
   console.log(`Сервер запущен на порту ${PORT}`);
