@@ -2,15 +2,15 @@ const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000; 
 
 // Подключение к MongoDB Atlas
-mongoose.connect('mongodb+srv://ageru:IhWl6T7j2Zx1EZ2e@cluster0.hbxe6dt.mongodb.net/restaurantMenu', {
+mongoose.connect(process.env.MONGODB_URI, { 
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
-.then(() => console.log('MongoDB підключен'))
-.catch(err => console.error('Помилка підключення к MongoDB', err));
+.then(() => console.log('MongoDB подключен'))
+.catch(err => console.error('Ошибка подключения к MongoDB', err));
 
 const noodleSchema = new mongoose.Schema({
   name: String,
