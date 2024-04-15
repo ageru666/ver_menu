@@ -108,7 +108,6 @@ app.get('/', (req, res) => {
 });
 
 
-
 app.get('/drinks/:category', async (req, res) => {
   const { category } = req.params;
   let model;
@@ -159,17 +158,22 @@ app.get('/salads', async (req, res) => {
   }
 });
 
-app.get('/soups', async (req, res) => {
+app.get('/soups', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'html', 'soups.html'));
+});
+
+app.get('/api/soups', async (req, res) => {
   try {
-    res.sendFile(path.join(__dirname, 'public', 'html', 'soups.html'));
-    console.log('sos');
     const soups = await Soup.find();
+    if (!soups.length) {
+      return res.status(404).send({ message: 'No soups found' });
+    }
     res.json(soups);
-    console.log(JSON.stringify(soups));
   } catch (error) {
-    res.status(500).send(error);
+    res.status(500).send({ message: 'Server error', error });
   }
 });
+
 
 app.get('/appetizers', async (req, res) => {
   try {
