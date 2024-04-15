@@ -29,6 +29,7 @@
     </div>
 
     <script>
+        require('./public/js/header.js');
         fetch('/api/soups')
             .then(response => {
                 if (!response.ok) {
