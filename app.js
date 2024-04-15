@@ -164,7 +164,9 @@ app.get('/soups', (req, res) => {
 app.get('/header.js', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'js', 'header.js'));
 });
-
+app.get('/footer.js', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'js', 'footer.js'));
+});
 app.get('/api/soups', async (req, res) => {
   try {
     const soups = await Soup.find();
