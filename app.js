@@ -106,9 +106,7 @@ app.use(express.static('public'));
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'html', 'index.html'));
 });
-app.get('/soups', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'html', 'soups.html'));
-});
+
 
 
 app.get('/drinks/:category', async (req, res) => {
@@ -163,6 +161,7 @@ app.get('/salads', async (req, res) => {
 
 app.get('/soups', async (req, res) => {
   try {
+    res.sendFile(path.join(__dirname, 'public', 'html', 'soups.html'));
     const soups = await Soup.find();
     res.json(soups);
   } catch (error) {
