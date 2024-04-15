@@ -107,6 +107,14 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'html', 'index.html'));
 });
 
+app.get('/header.js', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'js', 'header.js'));
+});
+
+app.get('/footer.js', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'js', 'footer.js'));
+});
+
 
 app.get('/drinks/:category', async (req, res) => {
   const { category } = req.params;
@@ -160,14 +168,6 @@ app.get('/salads', async (req, res) => {
 
 app.get('/soups', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'html', 'soups.html'));
-});
-
-app.get('/header.js', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'js', 'header.js'));
-});
-
-app.get('/footer.js', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'js', 'footer.js'));
 });
 
 app.get('/api/soups', async (req, res) => {
