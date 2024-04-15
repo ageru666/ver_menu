@@ -157,7 +157,11 @@ app.get('/noodles', async (req, res) => {
   }
 });
 
-app.get('/salads', async (req, res) => {
+app.get('/salads', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'html', 'salads.html'));
+});
+
+app.get('/api/salads', async (req, res) => {
   try {
     const salads = await Salad.find();
     res.json(salads);
