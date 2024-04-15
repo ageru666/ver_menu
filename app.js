@@ -162,8 +162,10 @@ app.get('/salads', async (req, res) => {
 app.get('/soups', async (req, res) => {
   try {
     res.sendFile(path.join(__dirname, 'public', 'html', 'soups.html'));
+    console.log('sos');
     const soups = await Soup.find();
     res.json(soups);
+    console.log('sosi');
   } catch (error) {
     res.status(500).send(error);
   }
