@@ -165,7 +165,7 @@ app.get('/soups', async (req, res) => {
     console.log('sos');
     const soups = await Soup.find();
     res.json(soups);
-    console.log('sosi');
+    console.log(JSON.stringify(soups));
   } catch (error) {
     res.status(500).send(error);
   }
