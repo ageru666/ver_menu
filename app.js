@@ -108,6 +108,7 @@ app.get('/', (req, res) => {
 });
 app.get('/soups', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'html', 'soups.html'));
+  res.sendFile(path.join(__dirname, 'public', 'js', 'header.js'));
 });
 
 
