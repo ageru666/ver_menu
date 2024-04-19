@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const footerHTML = `
-        <footer class="text-white bg-dark py-3" style="bottom: 0;">
-            <div class="container">
+        <footer class="text-white bg-dark " style="bottom: 0;">
+            <div class="container py-1">
                 <div class="row">
                     <div class="col-md-4">
                         <ul class="list-unstyled">
@@ -18,6 +18,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 document.addEventListener('DOMContentLoaded', function() {
     const footerHeight = document.querySelector('footer').offsetHeight;
-    document.body.style.paddingBottom = `${footerHeight}px`;
+  //  document.body.style.paddingBottom = `${footerHeight}px`;
 });
 
