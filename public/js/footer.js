@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const footerHTML = `
-        <footer class="text-white bg-dark " style="bottom: 0;">
-            <div class="container py-1">
+        <footer class="text-white bg-dark py-3" style="bottom: 0;">
+            <div class="container">
                 <div class="row">
                     <div class="col-md-4">
                         <ul class="list-unstyled">
