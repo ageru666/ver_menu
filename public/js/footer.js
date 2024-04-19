@@ -16,8 +16,5 @@ document.addEventListener('DOMContentLoaded', function() {
     `;
     document.body.insertAdjacentHTML('beforeend', footerHTML);
 });
-document.addEventListener('DOMContentLoaded', function() {
-    const footerHeight = document.querySelector('footer').offsetHeight;
-  //  document.body.style.paddingBottom = `${footerHeight}px`;
-});
+
 
