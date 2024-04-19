@@ -53,61 +53,35 @@
         </div>
     </div>
 
-   <script>
-    function fetchAndDisplayDrinks(category) {
-        fetch(`/drinks/${category}`)
-            .then(response => response.json())
-            .then(drinks => {
-                const container = document.querySelector(`#${category} .drinks-container`);
-                drinks.forEach(drink => {
-                    const cardHtml = `
-                        <div class="col-md-4 mb-4">
-                            <div class="card">
-                                <img src="${drink.image}" class="card-img-top" alt="${drink.name}">
-                                <div class="card-body">
-                                    <h5 class="card-title">${drink.name}</h5>
-                                    <p class="card-text">${drink.price}</p>
-                                    <p class="card-text">${drink.volume}</p> 
-                                    <p class="card-text">${drink.ingredients}</p>
+    <script>
+        function fetchAndDisplayDrinks(category) {
+            fetch(`/drinks/${category}`)
+                .then(response => response.json())
+                .then(drinks => {
+                    const container = document.querySelector(`#${category} .drinks-container`);
+                    drinks.forEach(drink => {
+                        const cardHtml = `
+                            <div class="col-md-4 mb-4">
+                                <div class="card">
+                                    <img src="${drink.image}" class="card-img-top" alt="${drink.name}">
+                                    <div class="card-body">
+                                        <h5 class="card-title">${drink.name}</h5>
+                                        <p class="card-text">${drink.price}</p>
+                                        <p class="card-text">${drink.volume ? drink.volume : ''}</p>
+                                        <p class="card-text">${drink.ingredients ? drink.ingredients : ''}</p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    `;
-                    container.innerHTML += cardHtml;
-                });
-            })
-            .catch(error => console.error('Ошибка:', error));
-    }
-
-    ['cocktails'].forEach(fetchAndDisplayDrinks);
-</script>
- <script>
-    function fetchAndDisplayDrink(category) {
-        fetch(`/drinks/${category}`)
-            .then(response => response.json())
-            .then(drinks => {
-                const container = document.querySelector(`#${category} .drinks-container`);
-                drinks.forEach(drink => {
-                    const cardHtml = `
-                        <div class="col-md-4 mb-4">
-                            <div class="card">
-                                <img src="${drink.image}" class="card-img-top" alt="${drink.name}">
-                                <div class="card-body">
-                                    <h5 class="card-title">${drink.name}</h5>
-                                    <p class="card-text">${drink.price}</p>
-                                    <p class="card-text">${drink.volume}</p> 
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                    container.innerHTML += cardHtml;
-                });
-            })
-            .catch(error => console.error('Ошибка:', error));
-    }
-
-    [ 'beer', 'wine', 'spirits', 'coffee'].forEach(fetchAndDisplayDrink);
-</script>
+                        `;
+                        container.innerHTML += cardHtml;
+                    });
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    
+        ['cocktails', 'beer', 'wine', 'spirits', 'coffee'].forEach(fetchAndDisplayDrinks);
+    </script>
+    
     <script src="/js/footer.js"></script>
     <script src="/js/header.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
