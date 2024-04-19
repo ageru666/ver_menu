@@ -115,8 +115,11 @@ app.get('/footer.js', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'js', 'footer.js'));
 });
 
+app.get('/drinks', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'html', 'barMenu.html'));
+});
 
-app.get('/drinks/:category', async (req, res) => {
+app.get('/api/drinks/:category', async (req, res) => {
   const { category } = req.params;
   let model;
 
