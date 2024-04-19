@@ -190,8 +190,11 @@ app.get('/api/soups', async (req, res) => {
   }
 });
 
+app.get('/appetizers', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'html', 'appetizers.html'));
+});
 
-app.get('/appetizers', async (req, res) => {
+app.get('/api/appetizers', async (req, res) => {
   try {
     const appetizers = await Appetizer.find();
     res.json(appetizers);
