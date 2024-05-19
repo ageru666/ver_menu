@@ -4,13 +4,13 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000; 
 
-// Подключение к MongoDB Atlas
+// Підключення до MongoDB Atlas
 mongoose.connect(process.env.MONGODB_URI, { 
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
-.then(() => console.log('MongoDB підключен'))
-.catch(err => console.error('Помилка підключення к MongoDB', err));
+.then(() => console.log('MongoDB підключено'))
+.catch(err => console.error('Помилка підключення до MongoDB', err));
 
 const dishSchema = new mongoose.Schema({
   name: String,
@@ -20,51 +20,24 @@ const dishSchema = new mongoose.Schema({
   image: String
 });
 
-const cocktailSchema = new mongoose.Schema({
-  name: String, 
-  price: String, 
+const drinkSchema = new mongoose.Schema({
+  name: String,
+  price: String,
   volume: String,
-  ingredients: String, 
-  image: String 
-});
-
-const beerSchema = new mongoose.Schema({
-  name: String, 
-  price: String, 
-  volume: String, 
-  image: String 
-});
-
-const wineSchema = new mongoose.Schema({
-  name: String, 
-  price: String, 
-  volume: String, 
-  image: String 
-});
-
-const spiritSchema = new mongoose.Schema({
-  name: String, 
-  price: String, 
-  volume: String, 
-  image: String 
-});
-
-const coffeeSchema = new mongoose.Schema({
-  name: String, 
-  price: String, 
-  volume: String, 
-  image: String 
+  ingredients: { type: String, required: false },
+  image: String
 });
 
 const Noodle = mongoose.model('Noodle', dishSchema, 'noodles');
 const Salad = mongoose.model('Salad', dishSchema, 'salads');
 const Soup = mongoose.model('Soup', dishSchema, 'soups');
 const Appetizer = mongoose.model('Appetizer', dishSchema, 'appetizers');
-const Cocktail = mongoose.model('Cocktail', cocktailSchema, 'cocktails');
-const Beer = mongoose.model('Beer', beerSchema, 'beer');
-const Wine = mongoose.model('Wine', wineSchema, 'wine');
-const Spirits = mongoose.model('Spirits', spiritSchema, 'spirits');
-const Coffee = mongoose.model('Coffee', coffeeSchema, 'coffee');
+
+const Cocktail = mongoose.model('Cocktail', drinkSchema, 'cocktails');
+const Beer = mongoose.model('Beer', drinkSchema, 'beer');
+const Wine = mongoose.model('Wine', drinkSchema, 'wine');
+const Spirits = mongoose.model('Spirits', drinkSchema, 'spirits');
+const Coffee = mongoose.model('Coffee', drinkSchema, 'coffee');
 
 app.use(express.json());
 app.use(express.static('public'));
@@ -151,11 +124,11 @@ app.get('/api/soups', async (req, res) => {
   try {
     const soups = await Soup.find();
     if (!soups.length) {
-      return res.status(404).send({ message: 'No soups found' });
+      return res.status(404).send({ message: 'Супи не знайдено' });
     }
     res.json(soups);
   } catch (error) {
-    res.status(500).send({ message: 'Server error', error });
+    res.status(500).send({ message: 'Помилка сервера', error });
   }
 });
 
@@ -213,5 +186,5 @@ app.post('/appetizers', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Сервер запущен на порту ${PORT}`);
+  console.log(`Сервер запущено на порту ${PORT}`);
 });
