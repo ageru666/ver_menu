@@ -4,7 +4,6 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000; 
 
-// Подключение к MongoDB Atlas
 mongoose.connect(process.env.MONGODB_URI, { 
   useNewUrlParser: true,
   useUnifiedTopology: true
@@ -20,11 +19,18 @@ const dishSchema = new mongoose.Schema({
   image: String
 });
 
+const cocktailSchema = new mongoose.Schema({
+  name: String,
+  price: String,
+  volume: String,
+  ingredients: String,
+  image: String
+});
+
 const drinkSchema = new mongoose.Schema({
   name: String,
   price: String,
   volume: String,
-  ingredients: { type: String, required: false },
   image: String
 });
 
@@ -34,7 +40,7 @@ const Noodle = createModel('Noodle', dishSchema);
 const Salad = createModel('Salad', dishSchema);
 const Soup = createModel('Soup', dishSchema);
 const Appetizer = createModel('Appetizer', dishSchema);
-const Cocktail = createModel('Cocktail', drinkSchema);
+const Cocktail = createModel('Cocktail', cocktailSchema);
 const Beer = createModel('Beer', drinkSchema);
 const Wine = createModel('Wine', drinkSchema);
 const Spirits = createModel('Spirits', drinkSchema);
@@ -81,7 +87,7 @@ app.get('/api/drinks/:category', async (req, res) => {
       model = Coffee; 
       break;
     default:
-      return res.status(404).send('Категория не знайдена');
+      return res.status(404).send('Категорія не знайдена');
   }
 
   try {
@@ -114,7 +120,7 @@ app.get('/api/salads', async (req, res) => {
     const salads = await Salad.find();
     res.json(salads);
   } catch (error) {
-    res.status (500).send(error);
+    res.status(500).send(error);
   }
 });
 
