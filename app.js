@@ -9,10 +9,9 @@ mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
-.then(() => console.log('MongoDB подключен'))
-.catch(err => console.error('Ошибка подключения к MongoDB', err));
+.then(() => console.log('MongoDB підключен'))
+.catch(err => console.error('Помилка підключення к MongoDB', err));
 
-// Общая схема для блюд
 const dishSchema = new mongoose.Schema({
   name: String,
   price: String,
@@ -21,7 +20,6 @@ const dishSchema = new mongoose.Schema({
   image: String
 });
 
-// Схема для коктейлей
 const cocktailSchema = new mongoose.Schema({
   name: String, 
   price: String, 
@@ -30,7 +28,6 @@ const cocktailSchema = new mongoose.Schema({
   image: String 
 });
 
-// Схема для пива
 const beerSchema = new mongoose.Schema({
   name: String, 
   price: String, 
@@ -38,7 +35,6 @@ const beerSchema = new mongoose.Schema({
   image: String 
 });
 
-// Схема для вина
 const wineSchema = new mongoose.Schema({
   name: String, 
   price: String, 
@@ -46,7 +42,6 @@ const wineSchema = new mongoose.Schema({
   image: String 
 });
 
-// Схема для крепких напитков
 const spiritSchema = new mongoose.Schema({
   name: String, 
   price: String, 
@@ -54,7 +49,6 @@ const spiritSchema = new mongoose.Schema({
   image: String 
 });
 
-// Схема для кофе
 const coffeeSchema = new mongoose.Schema({
   name: String, 
   price: String, 
@@ -62,7 +56,6 @@ const coffeeSchema = new mongoose.Schema({
   image: String 
 });
 
-// Создание моделей
 const Noodle = mongoose.model('Noodle', dishSchema, 'noodles');
 const Salad = mongoose.model('Salad', dishSchema, 'salads');
 const Soup = mongoose.model('Soup', dishSchema, 'soups');
@@ -113,7 +106,7 @@ app.get('/api/drinks/:category', async (req, res) => {
       model = Coffee; 
       break;
     default:
-      return res.status(404).send('Категория не найдена');
+      return res.status(404).send('Категорія не знайдена');
   }
 
   try {
