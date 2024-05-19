@@ -4,13 +4,15 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000; 
 
+// Подключение к MongoDB Atlas
 mongoose.connect(process.env.MONGODB_URI, { 
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
-.then(() => console.log('MongoDB підключен'))
-.catch(err => console.error('Помилка підключення к MongoDB', err));
+.then(() => console.log('MongoDB подключен'))
+.catch(err => console.error('Ошибка подключения к MongoDB', err));
 
+// Общая схема для блюд
 const dishSchema = new mongoose.Schema({
   name: String,
   price: String,
@@ -19,35 +21,59 @@ const dishSchema = new mongoose.Schema({
   image: String
 });
 
+// Схема для коктейлей
 const cocktailSchema = new mongoose.Schema({
-  name: String,
-  price: String,
+  name: String, 
+  price: String, 
   volume: String,
-  ingredients: String,
-  image: String
+  ingredients: String, 
+  image: String 
 });
 
-const drinkSchema = new mongoose.Schema({
-  name: String,
-  price: String,
-  volume: String,
-  image: String
+// Схема для пива
+const beerSchema = new mongoose.Schema({
+  name: String, 
+  price: String, 
+  volume: String, 
+  image: String 
 });
 
-const createModel = (name, schema) => mongoose.model(name, schema, name.toLowerCase() + 's');
+// Схема для вина
+const wineSchema = new mongoose.Schema({
+  name: String, 
+  price: String, 
+  volume: String, 
+  image: String 
+});
 
-const Noodle = createModel('Noodle', dishSchema);
-const Salad = createModel('Salad', dishSchema);
-const Soup = createModel('Soup', dishSchema);
-const Appetizer = createModel('Appetizer', dishSchema);
-const Cocktail = createModel('Cocktail', cocktailSchema);
-const Beer = createModel('Beer', drinkSchema);
-const Wine = createModel('Wine', drinkSchema);
-const Spirits = createModel('Spirits', drinkSchema);
-const Coffee = createModel('Coffee', drinkSchema);
+// Схема для крепких напитков
+const spiritSchema = new mongoose.Schema({
+  name: String, 
+  price: String, 
+  volume: String, 
+  image: String 
+});
+
+// Схема для кофе
+const coffeeSchema = new mongoose.Schema({
+  name: String, 
+  price: String, 
+  volume: String, 
+  image: String 
+});
+
+// Создание моделей
+const Noodle = mongoose.model('Noodle', dishSchema, 'noodles');
+const Salad = mongoose.model('Salad', dishSchema, 'salads');
+const Soup = mongoose.model('Soup', dishSchema, 'soups');
+const Appetizer = mongoose.model('Appetizer', dishSchema, 'appetizers');
+const Cocktail = mongoose.model('Cocktail', cocktailSchema, 'cocktails');
+const Beer = mongoose.model('Beer', beerSchema, 'beer');
+const Wine = mongoose.model('Wine', wineSchema, 'wine');
+const Spirits = mongoose.model('Spirits', spiritSchema, 'spirits');
+const Coffee = mongoose.model('Coffee', coffeeSchema, 'coffee');
 
 app.use(express.json());
-
 app.use(express.static('public'));
 
 app.get('/', (req, res) => {
@@ -87,7 +113,7 @@ app.get('/api/drinks/:category', async (req, res) => {
       model = Coffee; 
       break;
     default:
-      return res.status(404).send('Категорія не знайдена');
+      return res.status(404).send('Категория не найдена');
   }
 
   try {
