@@ -12,7 +12,7 @@ mongoose.connect(process.env.MONGODB_URI, {
 .then(() => console.log('MongoDB подключен'))
 .catch(err => console.error('Ошибка подключения к MongoDB', err));
 
-const noodleSchema = new mongoose.Schema({
+const dishSchema = new mongoose.Schema({
   name: String,
   price: String,
   weight: String,
@@ -20,84 +20,25 @@ const noodleSchema = new mongoose.Schema({
   image: String
 });
 
-const saladSchema = new mongoose.Schema({
+const drinkSchema = new mongoose.Schema({
   name: String,
   price: String,
-  weight: String,
-  ingredients: String,
-  image: String
-});
-
-const soupSchema = new mongoose.Schema({
-  name: String,
-  price: String,
-  weight: String,
-  ingredients: String,
-  image: String
-});
-
-const appetizersSchema = new mongoose.Schema({
-  name: String,
-  price: String,
-  weight: String,
-  ingredients: String,
-  image: String
-});
-
-const cocktailSchema = new mongoose.Schema({
-  name: String, 
-  price: String, 
   volume: String,
-  ingredients: String, 
-  image: String 
+  ingredients: String,
+  image: String
 });
 
-const beerSchema = new mongoose.Schema({
-  name: String, 
-  price: String, 
-  volume: String, 
-  image: String 
-});
+const createModel = (name, schema) => mongoose.model(name, schema, name.toLowerCase() + 's');
 
-const wineSchema = new mongoose.Schema({
-  name: String, 
-  price: String, 
-  volume: String, 
-  image: String 
-});
-
-const spiritSchema = new mongoose.Schema({
-  name: String, 
-  price: String, 
-  volume: String, 
-  image: String 
-});
-
-const coffeeSchema = new mongoose.Schema({
-  name: String, 
-  price: String, 
-  volume: String, 
-  image: String 
-});
-
-
-const Cocktail = mongoose.model('Cocktail', cocktailSchema, 'cocktails');
-
-const Beer = mongoose.model('Beer', beerSchema, 'beer');
-
-const Wine = mongoose.model('Wine', wineSchema, 'wine');
-
-const Spirits = mongoose.model('Spirits', spiritSchema, 'spirits');
-
-const Coffee = mongoose.model('Coffee', coffeeSchema, 'coffee');
-
-const Noodle = mongoose.model('Noodle', noodleSchema, 'noodles');
-
-const Salad = mongoose.model('Salad', saladSchema, 'salads');
-
-const Soup = mongoose.model('Soup', soupSchema, 'soups');
-
-const Appetizer = mongoose.model('Appetizer', appetizersSchema, 'appetizers');
+const Noodle = createModel('Noodle', dishSchema);
+const Salad = createModel('Salad', dishSchema);
+const Soup = createModel('Soup', dishSchema);
+const Appetizer = createModel('Appetizer', dishSchema);
+const Cocktail = createModel('Cocktail', drinkSchema);
+const Beer = createModel('Beer', drinkSchema);
+const Wine = createModel('Wine', drinkSchema);
+const Spirits = createModel('Spirits', drinkSchema);
+const Coffee = createModel('Coffee', drinkSchema);
 
 app.use(express.json());
 
@@ -130,7 +71,7 @@ app.get('/api/drinks/:category', async (req, res) => {
     case 'beer':
       model = Beer; 
       break;
-      case 'wine':
+    case 'wine':
       model = Wine; 
       break;
     case 'spirits':
@@ -140,7 +81,7 @@ app.get('/api/drinks/:category', async (req, res) => {
       model = Coffee; 
       break;
     default:
-      return res.status(404).send('Категорія не знайдена');
+      return res.status(404).send('Категория не найдена');
   }
 
   try {
@@ -205,7 +146,6 @@ app.get('/api/appetizers', async (req, res) => {
     res.status(500).send(error);
   }
 });
-
 
 app.post('/noodles', async (req, res) => {
   const noodle = new Noodle(req.body);
