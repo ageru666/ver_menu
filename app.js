@@ -9,8 +9,8 @@ mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
-.then(() => console.log('MongoDB подключен'))
-.catch(err => console.error('Ошибка подключения к MongoDB', err));
+.then(() => console.log('MongoDB підключен'))
+.catch(err => console.error('Помилка підключення к MongoDB', err));
 
 const dishSchema = new mongoose.Schema({
   name: String,
@@ -24,7 +24,7 @@ const drinkSchema = new mongoose.Schema({
   name: String,
   price: String,
   volume: String,
-  ingredients: String,
+  ingredients: { type: String, required: false },
   image: String
 });
 
@@ -81,7 +81,7 @@ app.get('/api/drinks/:category', async (req, res) => {
       model = Coffee; 
       break;
     default:
-      return res.status(404).send('Категория не найдена');
+      return res.status(404).send('Категория не знайдена');
   }
 
   try {
@@ -114,7 +114,7 @@ app.get('/api/salads', async (req, res) => {
     const salads = await Salad.find();
     res.json(salads);
   } catch (error) {
-    res.status(500).send(error);
+    res.status (500).send(error);
   }
 });
 
