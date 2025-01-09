@@ -10,15 +10,11 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(cors());
 
-// Подключение к MongoDB
-mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
+mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.error('MongoDB connection error:', err));
 
-// Маршруты
+// Маршрути
 const noodleRoutes = require('./routes/noodles');
 const saladRoutes = require('./routes/salads');
 const soupRoutes = require('./routes/soups');
