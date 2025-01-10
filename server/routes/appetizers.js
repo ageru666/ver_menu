@@ -1,21 +1,23 @@
 const express = require('express');
 const router = express.Router();
-const Dish = require('../models/dish');
+const getModelForCategory = require('../utils/getModelForCategory'); 
 
 router.get('/', async (req, res) => {
   try {
-    const appetizers = await Dish.find({ category: 'appetizers' });
-    res.json(appetizers);
+    const DishModel = getModelForCategory('appetizers'); 
+    const items = await DishModel.find();
+    res.json(items);
   } catch (error) {
     res.status(500).send(error);
   }
 });
 
 router.post('/', async (req, res) => {
-  const appetizer = new Dish({ ...req.body, category: 'appetizers' });
   try {
-    await appetizer.save();
-    res.status(201).send(appetizer);
+    const DishModel = getModelForCategory('appetizers'); 
+    const newDish = new DishModel(req.body);
+    await newDish.save();
+    res.status(201).json(newDish);
   } catch (error) {
     res.status(500).send(error);
   }

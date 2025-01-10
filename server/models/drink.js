@@ -8,4 +8,4 @@ const drinkSchema = new mongoose.Schema({
   image: String,
 });
 
-module.exports = mongoose.model('Drink', drinkSchema);
+module.exports = drinkSchema; 

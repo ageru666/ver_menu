@@ -8,4 +8,4 @@ const dishSchema = new mongoose.Schema({
   image: String,
 });
 
-module.exports = mongoose.model('Dish', dishSchema);
+module.exports = dishSchema; 
