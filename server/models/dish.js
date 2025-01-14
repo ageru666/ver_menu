@@ -6,6 +6,7 @@ const dishSchema = new mongoose.Schema({
   weight: String,
   ingredients: String,
   image: String,
+  category: String, 
 });
 
-module.exports = dishSchema; 
+module.exports = dishSchema;

@@ -16,7 +16,7 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route
               path="/salads"
-              element={<MenuPage apiEndpoint="/api/salads" title="Salads" />}
+              element={<MenuPage apiEndpoint="/api/dishes/salads" title="Salads" />}
             />
             <Route
               path="/drinks"
@@ -24,16 +24,17 @@ function App() {
             />
             <Route
               path="/soups"
-              element={<MenuPage apiEndpoint="/api/soups" title="Soups" />}
+              element={<MenuPage apiEndpoint="/api/dishes/soups" title="Soups" />}
             />
             <Route
               path="/appetizers"
-              element={<MenuPage apiEndpoint="/api/appetizers" title="Appetizers" />}
+              element={<MenuPage apiEndpoint="/api/dishes/appetizers" title="Appetizers" />}
             />
-            <Route
+           <Route
               path="/noodles"
-              element={<MenuPage apiEndpoint="/api/noodles" title="Noodles" />}
-            />
+              element={<MenuPage apiEndpoint="/api/dishes/noodles" title="Noodles" />} 
+              />
+
           </Routes>
         </main>
         <Footer />
