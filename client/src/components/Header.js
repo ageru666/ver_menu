@@ -1,47 +1,107 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { FaUserCircle } from 'react-icons/fa';
 
 const Header = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   return (
-    <header>
-      <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div className="container">
-          <a className="navbar-brand" href="/">Song Wu</a>
+    <nav className="bg-gray-800 p-4">
+      <div className="container mx-auto flex justify-between items-center">
+        <div className="flex items-center">
           <button
-            className="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse" 
-            data-bs-target="#navbarNav"
-            aria-controls="navbarNav"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
+            className="text-white text-2xl mr-4 block lg:hidden focus:outline-none"
+            aria-label="Toggle menu"
+            onClick={toggleMenu}
           >
-            <span className="navbar-toggler-icon"></span>
+            ☰
           </button>
-          <div className="collapse navbar-collapse" id="navbarNav">
-            <ul className="navbar-nav ms-auto">
-              <li className="nav-item">
-                <a className="nav-link" href="/">Home</a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="/salads">Salads</a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="/drinks">Drinks</a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="/soups">Soups</a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="/appetizers">Appetizers</a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="/noodles">Noodles</a>
-              </li>
-            </ul>
-          </div>
+          <Link to="/" className="text-white text-2xl font-bold">
+            Song Wu
+          </Link>
         </div>
-      </nav>
-    </header>
+
+        <ul className="hidden lg:flex space-x-6">
+          <li>
+            <Link to="/" className="text-gray-300 hover:text-white transition">
+              Home
+            </Link>
+          </li>
+          <li>
+            <Link to="/noodles" className="text-gray-300 hover:text-white transition">
+              Noodles
+            </Link>
+          </li>
+          <li>
+            <Link to="/soups" className="text-gray-300 hover:text-white transition">
+              Soups
+            </Link>
+          </li>
+          <li>
+            <Link to="/salads" className="text-gray-300 hover:text-white transition">
+              Salads
+            </Link>
+          </li>
+          <li>
+            <Link to="/appetizers" className="text-gray-300 hover:text-white transition">
+              Appetizers
+            </Link>
+          </li>
+          <li>
+            <Link to="/drinks" className="text-gray-300 hover:text-white transition">
+              Drinks
+            </Link>
+          </li>
+        </ul>
+
+        <div className="flex items-center space-x-4">
+          <Link to="/profile" className="text-white text-2xl focus:outline-none">
+            <FaUserCircle />
+          </Link>
+        </div>
+      </div>
+
+      {isMenuOpen && (
+        <div className="lg:hidden bg-gray-700">
+          <ul className="flex flex-col space-y-2 p-4">
+            <li>
+              <Link to="/" className="text-gray-300 hover:text-white transition">
+                Home
+              </Link>
+            </li>
+            <li>
+              <Link to="/noodles" className="text-gray-300 hover:text-white transition">
+                Noodles
+              </Link>
+            </li>
+            <li>
+              <Link to="/soups" className="text-gray-300 hover:text-white transition">
+                Soups
+              </Link>
+            </li>
+            <li>
+              <Link to="/salads" className="text-gray-300 hover:text-white transition">
+                Salads
+              </Link>
+            </li>
+            <li>
+              <Link to="/appetizers" className="text-gray-300 hover:text-white transition">
+                Appetizers
+              </Link>
+            </li>
+            <li>
+              <Link to="/drinks" className="text-gray-300 hover:text-white transition">
+                Drinks
+              </Link>
+            </li>
+          </ul>
+        </div>
+      )}
+    </nav>
   );
 };
 
