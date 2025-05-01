@@ -6,11 +6,9 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3002;
 
-// Middleware
 app.use(express.json());
 app.use(cors());
 
-// Подключение к MongoDB
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -22,11 +20,17 @@ mongoose.connect(process.env.MONGODB_URI, {
 const drinkRoutes = require('./routes/drinks');
 const userRoutes = require('./routes/users'); 
 const dishRoutes = require('./routes/dishes'); 
-
+const orderRoutes = require('./routes/orders');
+const searchRouter = require('./routes/search');
+const reservationsRouter = require('./routes/reservations');
 
 app.use('/api/drinks', drinkRoutes);
 app.use('/api/users', userRoutes); 
 app.use('/api/dishes', dishRoutes); 
+app.use('/api/orders', orderRoutes);
+app.use('/api/search', searchRouter);
+app.use('/api/reservations', reservationsRouter);
+
 
 app.use((err, req, res, next) => {
   const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
@@ -36,7 +40,6 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Запуск сервера
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });

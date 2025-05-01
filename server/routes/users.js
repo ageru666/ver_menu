@@ -6,18 +6,16 @@ const { protect, adminOnly } = require('../utils/authMiddleware');
 
 const router = express.Router();
 
-const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' });
-};
+function generateToken(id, role) {
+  return jwt.sign({ id, role }, process.env.JWT_SECRET, { expiresIn: '30d' });
+}
 
 router.post(
   '/register',
   [
     body('name').notEmpty().withMessage('Name is required'),
     body('email').isEmail().withMessage('Invalid email format'),
-    body('password')
-      .isLength({ min: 6 })
-      .withMessage('Password must be at least 6 characters long'),
+    body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -26,7 +24,6 @@ router.post(
     }
 
     const { name, email, password } = req.body;
-
     try {
       const userExists = await User.findOne({ email });
       if (userExists) {
@@ -34,12 +31,12 @@ router.post(
       }
 
       const user = await User.create({ name, email, password });
-      res.status(201).json({
+      return res.status(201).json({
         _id: user._id,
         name: user.name,
         email: user.email,
         role: user.role,
-        token: generateToken(user._id),
+        token: generateToken(user._id, user.role),
       });
     } catch (error) {
       res.status(500).json({ message: 'Error registering user', error: error.message });
@@ -60,20 +57,18 @@ router.post(
     }
 
     const { email, password } = req.body;
-
     try {
       const user = await User.findOne({ email });
-
       if (user && (await user.matchPassword(password))) {
-        res.json({
+        return res.json({
           _id: user._id,
           name: user.name,
           email: user.email,
           role: user.role,
-          token: generateToken(user._id),
+          token: generateToken(user._id, user.role),
         });
       } else {
-        res.status(401).json({ message: 'Invalid email or password' });
+        return res.status(401).json({ message: 'Invalid email or password' });
       }
     } catch (error) {
       res.status(500).json({ message: 'Error logging in', error: error.message });
