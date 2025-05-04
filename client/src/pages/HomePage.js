@@ -38,8 +38,6 @@ const HomePage = () => {
     });
   };
 
-  const totalQty = cart.reduce((sum, i) => sum + (i.quantity || 1), 0);
-
   return (
     <div>
       <section
@@ -50,7 +48,7 @@ const HomePage = () => {
         }}
       >
         <div className="absolute inset-0 bg-black opacity-50"></div>
-        <div className="relative z-10 text-white text-center px-4">
+        <div className="relative z-10 text-center text-white px-4">
           <h1 className="text-4xl md:text-6xl font-extrabold mb-4">Song Wu</h1>
           <p className="text-lg md:text-2xl mb-8 max-w-2xl mx-auto">
             Справжній смак корейської кухні у серці Києва
@@ -111,11 +109,11 @@ const HomePage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <blockquote className="bg-white p-6 rounded-lg shadow-md italic">
               "Найкращий ресторан, який я коли-небудь відвідував! Атмосфера, смак страв та сервіс – все на найвищому рівні."
-              <footer className="mt-4 text-right font-semibold">— Марія, Київ</footer>
+              <footer className="mt-4 text-left font-semibold">— Марія, Київ</footer>
             </blockquote>
             <blockquote className="bg-white p-6 rounded-lg shadow-md italic">
               "Відчуваєш себе справді особливим! Рекомендую всім, хто цінує якісну корейську кухню."
-              <footer className="mt-4 text-right font-semibold">— Олексій, Київ</footer>
+              <footer className="mt-4 text-left font-semibold">— Олексій, Київ</footer>
             </blockquote>
           </div>
         </div>
@@ -135,11 +133,7 @@ const HomePage = () => {
           </a>
         </div>
       </section>
-
-      <div className="fixed bottom-5 right-5 bg-gray-800 text-white p-4 rounded-full shadow-lg flex items-center space-x-2">
-        <FaShoppingCart className="text-2xl" />
-        <span>{totalQty} товарів</span>
-      </div>
+      {/* Нижній фіксований віджет видалено */}
     </div>
   );
 };

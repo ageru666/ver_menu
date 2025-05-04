@@ -12,7 +12,7 @@ const drinkCategories = [
   { label: 'Коктейлі', value: 'cocktails' },
   { label: 'Пиво', value: 'beer' },
   { label: 'Вино', value: 'wine' },
-  { label: 'Спиртні', value: 'spirits' },
+  { label: 'Міцні', value: 'spirits' },
   { label: 'Кава', value: 'coffee' },
 ];
 
@@ -230,7 +230,7 @@ const AdminFoodsPage = () => {
                   <th className="border border-gray-300 px-4 py-2">Ціна</th>
                   <th className="border border-gray-300 px-4 py-2">Вага</th>
                   <th className="border border-gray-300 px-4 py-2">Інгредієнти</th>
-                  <th className="border border-gray-300 px-4 py-2">Image</th>
+                  <th className="border border-gray-300 px-4 py-2">Фото</th>
                   <th className="border border-gray-300 px-4 py-2">Дії</th>
                 </tr>
               </thead>
@@ -248,18 +248,18 @@ const AdminFoodsPage = () => {
                         className="w-16 h-16 object-cover"
                       />
                     </td>
-                    <td className="border border-gray-300 px-4 py-2 text-center space-y-2">
+                    <td className="border border-gray-300 px-4 py-2 text-center space-y-2 space-x-2">
                       <button
                         className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 transition text-sm"
                         onClick={() => handleEditItem(item)}
                       >
-                        Edit
+                        Змінити
                       </button>
                       <button
                         className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition text-sm"
                         onClick={() => handleDeleteItem(item._id)}
                       >
-                        Delete
+                        Видалити
                       </button>
                     </td>
                   </tr>

@@ -1,3 +1,4 @@
+// src/pages/LoginPage.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -27,7 +28,7 @@ const LoginPage = () => {
 
       const data = await response.json();
       if (!response.ok) {
-        throw new Error(data.message || 'Something went wrong');
+        throw new Error(data.message || 'Сталася помилка');
       }
 
       localStorage.setItem('authToken', data.token);
@@ -49,15 +50,19 @@ const LoginPage = () => {
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md bg-white rounded-lg shadow-md p-6">
         <h3 className="text-2xl font-semibold text-center mb-6">
-          {isLogin ? 'Login to Your Account' : 'Register a New Account'}
+          {isLogin ? 'Вхід до облікового запису' : 'Реєстрація нового облікового запису'}
         </h3>
 
-        {error && <div className="bg-red-100 text-red-800 p-2 rounded mb-4">{error}</div>}
+        {error && (
+          <div className="bg-red-100 text-red-800 p-2 rounded mb-4">
+            {error}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit}>
           {!isLogin && (
             <div className="mb-4">
-              <label className="block text-gray-700">Name</label>
+              <label className="block text-gray-700">Ім'я</label>
               <input
                 type="text"
                 name="name"
@@ -70,7 +75,7 @@ const LoginPage = () => {
           )}
 
           <div className="mb-4">
-            <label className="block text-gray-700">Email</label>
+            <label className="block text-gray-700">Електронна пошта</label>
             <input
               type="email"
               name="email"
@@ -82,7 +87,7 @@ const LoginPage = () => {
           </div>
 
           <div className="mb-4">
-            <label className="block text-gray-700">Password</label>
+            <label className="block text-gray-700">Пароль</label>
             <input
               type="password"
               name="password"
@@ -94,7 +99,7 @@ const LoginPage = () => {
           </div>
 
           <button className="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700 transition">
-            {isLogin ? 'Login' : 'Register'}
+            {isLogin ? 'Увійти' : 'Зареєструватися'}
           </button>
         </form>
 
@@ -103,7 +108,9 @@ const LoginPage = () => {
             className="text-indigo-600 hover:underline"
             onClick={() => setIsLogin(!isLogin)}
           >
-            {isLogin ? 'Create an account' : 'Already have an account? Login'}
+            {isLogin
+              ? 'Не маєте акаунту? Зареєструватися'
+              : 'Вже є акаунт? Увійти'}
           </button>
         </div>
       </div>

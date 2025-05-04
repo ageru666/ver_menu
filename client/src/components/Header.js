@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+// src/components/Header.jsx
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   FaSearch,
@@ -16,7 +17,7 @@ import { FaBowlRice } from 'react-icons/fa6';
 const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userRole, setUserRole] = useState(null);
-  const [, setCartCount] = useState(0);
+  const [cartCount, setCartCount] = useState(0);
   const [profileOpen, setProfileOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [catOpen, setCatOpen] = useState(false);
@@ -25,26 +26,27 @@ const Header = () => {
 
   const navigate = useNavigate();
 
+  // Проверяем авторизацию каждые 500ms
   useEffect(() => {
-    const interval = setInterval(() => {
+    const authInterval = setInterval(() => {
       const token = localStorage.getItem('authToken');
       const role = localStorage.getItem('userRole');
       setIsLoggedIn(!!token);
       setUserRole(role);
     }, 500);
-    return () => clearInterval(interval);
+    return () => clearInterval(authInterval);
   }, []);
 
+  // Обновляем количество в корзине каждые 500ms
   useEffect(() => {
     const updateCartCount = () => {
       const cart = JSON.parse(localStorage.getItem('cart')) || [];
-      const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
+      const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
       setCartCount(totalItems);
     };
     updateCartCount();
-
-    window.addEventListener('storage', updateCartCount);
-    return () => window.removeEventListener('storage', updateCartCount);
+    const cartInterval = setInterval(updateCartCount, 500);
+    return () => clearInterval(cartInterval);
   }, []);
 
   const handleLogout = () => {
@@ -58,11 +60,11 @@ const Header = () => {
   };
 
   const categories = [
-    { label: 'Локшина', icon: <FaBowlRice />, to: '/noodles' },
-    { label: 'Супи',    icon: <FaMugHot />,   to: '/soups'    },
-    { label: 'Салати',  icon: <FaCarrot />,   to: '/salads'  },
+    { label: 'Локшина', icon: <FaBowlRice />,   to: '/noodles'    },
+    { label: 'Супи',    icon: <FaMugHot />,     to: '/soups'      },
+    { label: 'Салати',  icon: <FaCarrot />,     to: '/salads'     },
     { label: 'Закуски', icon: <FaCookieBite />, to: '/appetizers' },
-    { label: 'Напої',   icon: <FaGlassWhiskey />, to: '/drinks' },
+    { label: 'Напої',   icon: <FaGlassWhiskey /> , to: '/drinks'  },
   ];
 
   const toggleMobileMenu = () => {
@@ -145,7 +147,11 @@ const Header = () => {
               <Link to="/cart" className="text-white text-xl hover:text-gray-200 transition-colors no-underline">
                 <FaShoppingCart />
               </Link>
-              {/* Бейдж с количеством удалён */}
+              {cartCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+                  {cartCount}
+                </span>
+              )}
             </div>
           </div>
         </div>

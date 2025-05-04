@@ -34,8 +34,6 @@ const MenuPage = ({ apiEndpoint, title }) => {
     });
   };
 
-  const totalQty = cart.reduce((sum, i) => sum + (i.quantity || 1), 0);
-
   return (
     <div className="container mx-auto py-6">
       <h2 className="text-3xl font-bold text-center mb-6">{title}</h2>
@@ -61,11 +59,7 @@ const MenuPage = ({ apiEndpoint, title }) => {
           </div>
         ))}
       </div>
-
-      <div className="fixed bottom-5 right-5 bg-gray-800 text-white p-4 rounded-full shadow-lg flex items-center space-x-2">
-        <FaShoppingCart className="text-2xl" />
-        <span>{totalQty} товарів</span>
-      </div>
+      {/* Нижний виджет удалён */}
     </div>
   );
 };
