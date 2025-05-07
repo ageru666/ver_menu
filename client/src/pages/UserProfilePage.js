@@ -10,7 +10,7 @@ const UserProfilePage = () => {
     const token = localStorage.getItem('authToken');
     const fetchMyOrders = async () => {
       try {
-        const res = await fetch('${process.env.REACT_APP_API_URL}/api/orders/my', {
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/orders/my`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

@@ -140,7 +140,7 @@ const CheckoutPage = () => {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      const response = await fetch('${process.env.REACT_APP_API_URL}/api/orders/create', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/orders/create`, {
         method: 'POST',
         headers,
         body: JSON.stringify(orderData),

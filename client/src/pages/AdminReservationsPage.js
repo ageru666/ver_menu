@@ -26,7 +26,7 @@ const AdminReservationsPage = () => {
   useEffect(() => {
     const fetchReservations = async () => {
       try {
-        const res = await fetch('${process.env.REACT_APP_API_URL}/api/reservations', {
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/reservations`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!res.ok) throw new Error('Не вдалося завантажити бронювання');
