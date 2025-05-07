@@ -131,8 +131,8 @@ const AdminFoodsPage = () => {
     try {
       const endpoint =
         activeTab === 'dishes'
-          ? `http://localhost:3002/api/dishes/${selectedCategory}/${editingItem._id}`
-          : `http://localhost:3002/api/drinks/${selectedCategory}/${editingItem._id}`;
+          ? `${process.env.REACT_APP_API_URL}/api/dishes/${selectedCategory}/${editingItem._id}`
+          : `${process.env.REACT_APP_API_URL}/api/drinks/${selectedCategory}/${editingItem._id}`;
       const response = await fetch(endpoint, {
         method: 'PATCH',
         headers: {
