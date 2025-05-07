@@ -26,7 +26,7 @@ const AdminReservationsPage = () => {
   useEffect(() => {
     const fetchReservations = async () => {
       try {
-        const res = await fetch('http://localhost:3002/api/reservations', {
+        const res = await fetch('${process.env.REACT_APP_API_URL}/api/reservations', {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!res.ok) throw new Error('Не вдалося завантажити бронювання');
@@ -43,7 +43,7 @@ const AdminReservationsPage = () => {
     const label = statuses.find(s => s.value === status)?.label;
     if (!window.confirm(`Змінити статус на „${label}“?`)) return;
     try {
-      const res = await fetch(`http://localhost:3002/api/reservations/${id}`, {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/reservations/${id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

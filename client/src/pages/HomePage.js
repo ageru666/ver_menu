@@ -10,7 +10,7 @@ const HomePage = () => {
   const [featuredDishes, setFeaturedDishes] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:3002/api/dishes')
+    fetch('${process.env.REACT_APP_API_URL}/api/dishes')
       .then(res => {
         if (!res.ok) throw new Error('Помилка завантаження страв');
         return res.json();

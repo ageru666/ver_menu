@@ -1,20 +1,16 @@
-// SearchPage.js
 import React, { useState, useEffect } from 'react';
 
 const SearchPage = () => {
-  // Стан для запиту, результатів, завантаження та помилки
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Стан для кошика – завантаження з localStorage
   const [cart, setCart] = useState(() => {
     const savedCart = localStorage.getItem('cart');
     return savedCart ? JSON.parse(savedCart) : [];
   });
 
-  // Функція для додавання страви до кошика
   const addToCart = (item) => {
     setCart((prevCart) => {
       const updatedCart = [...prevCart, item];
@@ -23,7 +19,6 @@ const SearchPage = () => {
     });
   };
 
-  // Функція, що виконує запит до API для пошуку
   const handleSearch = async () => {
     if (query.trim() === '') {
       setResults([]);
@@ -33,8 +28,7 @@ const SearchPage = () => {
     setLoading(true);
     setError(null);
     try {
-      // Використовуємо повну адресу бекенду (порт 3002)
-      const response = await fetch(`http://localhost:3002/api/search?query=${encodeURIComponent(query)}`);
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/search?query=${encodeURIComponent(query)}`);
       console.log('Статус відповіді:', response.status);
       if (!response.ok) {
         throw new Error(`Помилка запиту: ${response.status}`);
@@ -50,7 +44,6 @@ const SearchPage = () => {
     }
   };
 
-  // Використовуємо debounce – виклик пошуку через 500 мс після останньої зміни query
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       handleSearch();
@@ -61,7 +54,6 @@ const SearchPage = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-4 text-center">Пошук страв та напоїв</h1>
-      {/* Рядок пошуку (залишено з попередньої версії) */}
       <div className="mb-4 flex">
         <input
           type="text"
@@ -82,11 +74,9 @@ const SearchPage = () => {
       {(!loading && results.length === 0 && query.trim() !== '') && (
         <p className="text-center">Нічого не знайдено</p>
       )}
-      {/* Відображення результатів пошуку у вигляді карточок */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {results.map(item => {
           if (item.type === 'dish') {
-            // Карточка для страв
             return (
               <div
                 key={item._id}
@@ -112,7 +102,6 @@ const SearchPage = () => {
               </div>
             );
           } else if (item.type === 'drink') {
-            // Карточка для напоїв (без кнопки "Додати до кошика")
             return (
               <div
                 key={item._id}
@@ -143,7 +132,6 @@ const SearchPage = () => {
           }
         })}
       </div>
-      {/* Фіксований віджет кошика, як у MenuPage */}
       <div className="fixed bottom-5 right-5 bg-gray-800 text-white p-4 rounded-full shadow-lg flex items-center space-x-2">
         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2 9m12-9l2 9m-9-9v9" />
