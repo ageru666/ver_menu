@@ -88,7 +88,7 @@ const CartPage = () => {
             ))}
           </div>
           <div className="flex justify-between items-center mt-6">
-            <p className="text-xl font-bold text-gray-800">Total: {calculateTotal()} грн</p>
+            <p className="text-xl font-bold text-gray-800">Сума: {calculateTotal()} грн</p>
             <button
               onClick={handleCheckout}
               className="bg-blue-500 text-white py-2 px-6 rounded-md hover:bg-blue-600 transition"
