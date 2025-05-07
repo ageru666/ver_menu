@@ -167,7 +167,7 @@ const Header = () => {
       {/* Нижній хедер (Categories Bar) */}
       <div className="bg-gray-700 text-gray-200 md:w-4/5 w-full mx-auto rounded-b py-1">
         <div className="md:hidden flex items-center justify-center">
-          <h3 className="text-lg font-semibold mr-2">Категорія</h3>
+          <h3 className="text-lg font-semibold mr-2">Меню</h3>
           <button onClick={toggleCat} className="text-white text-xl">
             {catOpen ? <FaAngleUp /> : <FaAngleDown />}
           </button>
