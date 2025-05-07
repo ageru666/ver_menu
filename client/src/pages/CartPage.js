@@ -1,4 +1,3 @@
-// src/pages/CartPage.js
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaTrash } from 'react-icons/fa';
@@ -61,7 +60,7 @@ const CartPage = () => {
                   />
                   <div>
                     <h3 className="text-lg font-semibold text-gray-800">{item.name}</h3>
-                    <p className="text-gray-600">{item.price} грн</p>
+                    <p className="text-gray-600">{item.price}</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -156,7 +155,7 @@ const CartPage = () => {
 
           <div className="mt-6 text-center">
             <p className="text-xl font-bold text-gray-800 mb-4">
-              Total: {calculateTotal()} грн
+              Сума: {calculateTotal()} грн
             </p>
             <button
               onClick={handleCheckout}
