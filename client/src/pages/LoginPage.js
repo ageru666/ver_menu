@@ -20,7 +20,7 @@ const LoginPage = () => {
 
     const endpoint = isLogin ? '/api/users/login' : '/api/users/register';
     try {
-      const response = await fetch(`http://localhost:3002${endpoint}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
