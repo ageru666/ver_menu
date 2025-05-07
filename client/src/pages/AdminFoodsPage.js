@@ -51,8 +51,8 @@ const AdminFoodsPage = () => {
       try {
         const endpoint =
           activeTab === 'dishes'
-            ? `http://localhost:3002/api/dishes/${selectedCategory}`
-            : `http://localhost:3002/api/drinks/${selectedCategory}`;
+            ? `${process.env.REACT_APP_API_URL}/api/dishes/${selectedCategory}`
+            : `${process.env.REACT_APP_API_URL}/api/drinks/${selectedCategory}`;
         const response = await fetch(endpoint, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -78,8 +78,8 @@ const AdminFoodsPage = () => {
     try {
       const endpoint =
         activeTab === 'dishes'
-          ? `http://localhost:3002/api/dishes/${selectedCategory}`
-          : `http://localhost:3002/api/drinks/${selectedCategory}`;
+          ? `${process.env.REACT_APP_API_URL}/api/dishes/${selectedCategory}`
+          : `${process.env.REACT_APP_API_URL}/api/drinks/${selectedCategory}`;
       const response = await fetch(endpoint, {
         method: 'POST',
         headers: {
@@ -102,8 +102,8 @@ const AdminFoodsPage = () => {
     try {
       const endpoint =
         activeTab === 'dishes'
-          ? `http://localhost:3002/api/dishes/${selectedCategory}/${id}`
-          : `http://localhost:3002/api/drinks/${selectedCategory}/${id}`;
+          ? `${process.env.REACT_APP_API_URL}/api/dishes/${selectedCategory}/${id}`
+          : `${process.env.REACT_APP_API_URL}/api/drinks/${selectedCategory}/${id}`;
       const response = await fetch(endpoint, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
