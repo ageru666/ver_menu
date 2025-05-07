@@ -133,7 +133,7 @@ const AdminFoodsPage = () => {
         activeTab === 'dishes'
         editingCategory === 'dishes'
         ? `${process.env.REACT_APP_API_URL}/api/dishes/${selectedCategory}/${editingItem._id}`
-        : `${process.env.REACT_APP_API_URL}/api/drinks/${selectedCategory}/${editingItem._id}`;      
+        : `${process.env.REACT_APP_API_URL}/api/drinks/${selectedCategory}/${editingItem._id}`  
       const response = await fetch(endpoint, {
         method: 'PATCH',
         headers: {
