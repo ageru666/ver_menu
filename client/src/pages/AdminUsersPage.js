@@ -16,9 +16,9 @@ const AdminUsersPage = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch('${process.env.REACT_APP_API_URL}/api/users', {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/users`, {
           headers: { Authorization: `Bearer ${token}` },
-        });
+        });        
         if (!response.ok) {
           throw new Error('Не вдалося завантажити користувачів');
         }
