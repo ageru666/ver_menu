@@ -9,7 +9,7 @@ const MenuPage = ({ apiEndpoint, title }) => {
   });
 
   useEffect(() => {
-    fetch(`http://localhost:3002${apiEndpoint}`)
+    fetch(`${process.env.REACT_APP_API_URL}${apiEndpoint}`)
       .then(res => {
         if (!res.ok) throw new Error('Network response was not ok');
         return res.json();
