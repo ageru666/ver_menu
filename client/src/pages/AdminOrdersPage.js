@@ -12,7 +12,7 @@ const statuses = [
   { value: 'pending',     label: 'Очікується'   },
   { value: 'confirmed',   label: 'Підтверджено' },
   { value: 'cooking',     label: 'Готується'    },
-  { value: 'on delivery', label: 'В доставці'   },
+  { value: 'on delivery', label: 'У дорозі'   },
   { value: 'delivered',   label: 'Доставлено'   },
   { value: 'canceled',    label: 'Скасовано'    },
 ];
@@ -233,26 +233,62 @@ const AdminOrdersPage = () => {
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md relative">
             <h3 className="text-xl font-bold mb-4">Деталі замовлення</h3>
-            <button onClick={closeModal} className="absolute top-2 right-2 text-gray-400 hover:text-gray-700">
+            <button
+              onClick={closeModal}
+              className="absolute top-2 right-2 text-gray-400 hover:text-gray-700"
+            >
               ✕
             </button>
             <div className="space-y-3">
-              <p>
-                <span className="font-medium">№:</span>{' '}
-                {selectedOrder.orderNumber || selectedOrder._id}
-              </p>
-              <p>
-                <span className="font-medium">Статус:</span>{' '}
-                {statuses.find(s => s.value === selectedOrder.status)?.label}
-              </p>
-              <p>
-                <span className="font-medium">Сума:</span>{' '}
-                {selectedOrder.total?.toFixed(2)} грн
-              </p>
-              {/* тут можна додати інші подробиці */}
+              <p><span className="font-medium">№:</span> {selectedOrder.orderNumber || selectedOrder._id}</p>
+              <p><span className="font-medium">Статус:</span> {statuses.find(s => s.value === selectedOrder.status)?.label}</p>
+              <p><span className="font-medium">Сума:</span> {selectedOrder.total?.toFixed(2)} грн</p>
+
+              {selectedOrder.contactInfo && (
+                <>
+                  <p><span className="font-medium">Ім’я:</span> {selectedOrder.contactInfo.name}</p>
+                  <p><span className="font-medium">Телефон:</span> {selectedOrder.contactInfo.phone}</p>
+                  {selectedOrder.contactInfo.email && (
+                    <p><span className="font-medium">Email:</span> {selectedOrder.contactInfo.email}</p>
+                  )}
+                </>
+              )}
+
+              {selectedOrder.orderType === 'Доставка' && selectedOrder.deliveryInfo && (
+                <>
+                  <p><span className="font-medium">Вулиця:</span> {selectedOrder.deliveryInfo.street}</p>
+                  <p><span className="font-medium">Будинок:</span> {selectedOrder.deliveryInfo.building}</p>
+                  {selectedOrder.deliveryInfo.entrance && (
+                    <p><span className="font-medium">Під’їзд:</span> {selectedOrder.deliveryInfo.entrance}</p>
+                  )}
+                  {selectedOrder.deliveryInfo.comment && (
+                    <p><span className="font-medium">Коментар:</span> {selectedOrder.deliveryInfo.comment}</p>
+                  )}
+                </>
+              )}
+
+              {selectedOrder.orderType === 'Самовивіз' && (
+                <p><span className="font-medium">Самовивіз:</span> за адресою вул. Центральна, 10, Київ</p>
+              )}
+
+              {selectedOrder.cart && selectedOrder.cart.length > 0 && (
+                <div>
+                  <h4 className="font-semibold">Склад кошика:</h4>
+                  <ul className="list-disc list-inside">
+                    {selectedOrder.cart.map((item, idx) => (
+                      <li key={idx}>
+                        {item.name} × {item.quantity} = {(item.price * item.quantity).toFixed(2)} грн
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
             <div className="mt-5 text-right">
-              <button onClick={closeModal} className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400">
+              <button
+                onClick={closeModal}
+                className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
+              >
                 Закрити
               </button>
             </div>
