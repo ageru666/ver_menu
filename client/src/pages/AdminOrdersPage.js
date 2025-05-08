@@ -237,10 +237,14 @@ const AdminOrdersPage = () => {
         ✕
       </button>
       <div className="space-y-3">
-        <p><span className="font-medium">№:</span> {selectedOrder.orderNumber || selectedOrder._id}</p>
+        <p><span className="font-medium">№ замовлення:</span> {selectedOrder.orderNumber || selectedOrder._id}</p>
+        <p><span className="font-medium">Тип замовлення:</span> {selectedOrder.orderType === 'delivery' ? 'Доставка' : 'Самовивіз'}</p>
+        <p><span className="font-medium">Час:</span> {selectedOrder.timeType === 'ready' ? 'По готовності' : `На ${selectedOrder.time}`}</p>
+        <p><span className="font-medium">Оплата:</span> {selectedOrder.paymentMethod === 'cash' ? 'Готівкою кур\'єру' : 'Карткою кур\'єру'}</p>
         <p><span className="font-medium">Статус:</span> {statuses.find(s => s.value === selectedOrder.status)?.label}</p>
         <p><span className="font-medium">Сума:</span> {selectedOrder.total?.toFixed(2)} грн</p>
 
+        {/* контактна інформація */}
         {selectedOrder.contactInfo && (
           <>
             <p><span className="font-medium">Ім’я:</span> {selectedOrder.contactInfo.name}</p>
@@ -251,7 +255,8 @@ const AdminOrdersPage = () => {
           </>
         )}
 
-        {selectedOrder.orderType === 'Доставка' && selectedOrder.deliveryInfo && (
+        {/* адреса доставки */}
+        {selectedOrder.orderType === 'delivery' && selectedOrder.deliveryInfo && (
           <>
             <p><span className="font-medium">Вулиця:</span> {selectedOrder.deliveryInfo.street}</p>
             <p><span className="font-medium">Будинок:</span> {selectedOrder.deliveryInfo.building}</p>
@@ -273,13 +278,10 @@ const AdminOrdersPage = () => {
           </>
         )}
 
-        {selectedOrder.orderType === 'Самовивіз' && (
-          <p><span className="font-medium">Самовивіз:</span> за адресою вул. Центральна, 10, Київ</p>
-        )}
-
+        {/* список товарів */}
         {selectedOrder.cart && selectedOrder.cart.length > 0 && (
           <div>
-            <h4 className="font-semibold">Склад кошика:</h4>
+            <h4 className="font-semibold">Склад замовлення:</h4>
             <ul className="list-disc list-inside">
               {selectedOrder.cart.map((item, idx) => (
                 <li key={idx}>
@@ -290,6 +292,7 @@ const AdminOrdersPage = () => {
           </div>
         )}
       </div>
+
       <div className="mt-5 text-right">
         <button
           onClick={closeModal}
@@ -301,6 +304,7 @@ const AdminOrdersPage = () => {
     </div>
   </div>
 )}
+
 
       <div className="text-center mt-6">
         <button
