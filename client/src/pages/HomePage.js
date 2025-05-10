@@ -6,11 +6,11 @@ const HomePage = () => {
     const stored = localStorage.getItem('cart');
     return stored ? JSON.parse(stored) : [];
   });
-
+  const API = process.env.REACT_APP_API_URL || 'http://localhost:3002';
   const [featuredDishes, setFeaturedDishes] = useState([]);
 
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_API_URL}/api/dishes`)
+    fetch(`${API}/api/dishes`)
       .then(res => {
         if (!res.ok) throw new Error('Помилка завантаження страв');
         return res.json();

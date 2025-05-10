@@ -22,11 +22,12 @@ const AdminReservationsPage = () => {
   const [selected, setSelected] = useState(null);
   const navigate = useNavigate();
   const token = localStorage.getItem('authToken');
+  const API = process.env.REACT_APP_API_URL || 'http://localhost:3002';
 
   useEffect(() => {
     const fetchReservations = async () => {
       try {
-        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/reservations`, {
+        const res = await fetch(`${API}/api/reservations`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!res.ok) throw new Error('Не вдалося завантажити бронювання');

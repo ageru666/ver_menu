@@ -1,15 +1,46 @@
 import React, { useState, useEffect } from 'react';
 import { FaShoppingCart } from 'react-icons/fa';
 
+const CART_TTL = 30 * 60 * 1000; 
+
 const MenuPage = ({ apiEndpoint, title }) => {
+  const API = process.env.REACT_APP_API_URL || 'http://localhost:3002';
   const [items, setItems] = useState([]);
-  const [cart, setCart] = useState(() => {
-    const saved = localStorage.getItem('cart');
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [cart, setCart] = useState(() => readCart());
+
+  function readCart() {
+    const raw = localStorage.getItem('cart');
+    if (!raw) return [];
+    try {
+      const parsed = JSON.parse(raw);
+      if (parsed.items && parsed.expiry) {
+        if (Date.now() <= parsed.expiry) {
+          return parsed.items.map(i => ({ ...i, quantity: i.quantity || 1 }));
+        } else {
+          localStorage.removeItem('cart');
+          return [];
+        }
+      }
+      if (Array.isArray(parsed)) {
+        return parsed.map(i => ({ ...i, quantity: i.quantity || 1 }));
+      }
+    } catch {
+    }
+    return [];
+  }
+
+  function saveCart(cartArray) {
+    localStorage.setItem(
+      'cart',
+      JSON.stringify({
+        items: cartArray,
+        expiry: Date.now() + CART_TTL,
+      })
+    );
+  }
 
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_API_URL}${apiEndpoint}`)
+    fetch(`${API}${apiEndpoint}`)
       .then(res => {
         if (!res.ok) throw new Error('Network response was not ok');
         return res.json();
@@ -29,7 +60,7 @@ const MenuPage = ({ apiEndpoint, title }) => {
       } else {
         next = [...prev, { ...item, quantity: 1 }];
       }
-      localStorage.setItem('cart', JSON.stringify(next));
+      saveCart(next);
       return next;
     });
   };
@@ -41,7 +72,7 @@ const MenuPage = ({ apiEndpoint, title }) => {
           i._id === itemId ? { ...i, quantity: (i.quantity || 1) + delta } : i
         )
         .filter(i => i.quantity > 0);
-      localStorage.setItem('cart', JSON.stringify(next));
+      saveCart(next);
       return next;
     });
   };

@@ -1,4 +1,3 @@
-// src/components/Header.jsx
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
@@ -14,6 +13,8 @@ import {
 } from 'react-icons/fa';
 import { FaBowlRice } from 'react-icons/fa6';
 
+const CART_TTL = 30 * 60 * 1000; 
+
 const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userRole, setUserRole] = useState(null);
@@ -23,30 +24,40 @@ const Header = () => {
   const [catOpen, setCatOpen] = useState(false);
   const [categoriesHovered, setCategoriesHovered] = useState(false);
   const [profileTimeout, setProfileTimeout] = useState(null);
-
   const navigate = useNavigate();
 
-  // Проверяем авторизацию каждые 500ms
   useEffect(() => {
     const authInterval = setInterval(() => {
-      const token = localStorage.getItem('authToken');
-      const role = localStorage.getItem('userRole');
-      setIsLoggedIn(!!token);
-      setUserRole(role);
+      setIsLoggedIn(!!localStorage.getItem('authToken'));
+      setUserRole(localStorage.getItem('userRole'));
     }, 500);
     return () => clearInterval(authInterval);
   }, []);
 
-  // Обновляем количество в корзине каждые 500ms
   useEffect(() => {
-    const updateCartCount = () => {
-      const cart = JSON.parse(localStorage.getItem('cart')) || [];
-      const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
-      setCartCount(totalItems);
+    const readCart = () => {
+      const raw = localStorage.getItem('cart');
+      let parsed, items = [];
+      try { parsed = JSON.parse(raw); } catch {}
+      if (parsed && parsed.items && parsed.expiry) {
+        if (Date.now() > parsed.expiry) {
+          localStorage.removeItem('cart');
+        } else {
+          items = parsed.items;
+        }
+      } else if (Array.isArray(parsed)) {
+        items = parsed;
+        localStorage.setItem('cart', JSON.stringify({
+          items,
+          expiry: Date.now() + CART_TTL
+        }));
+      }
+      const total = items.reduce((sum, i) => sum + (i.quantity || 1), 0);
+      setCartCount(total);
     };
-    updateCartCount();
-    const cartInterval = setInterval(updateCartCount, 500);
-    return () => clearInterval(cartInterval);
+    readCart();
+    const ci = setInterval(readCart, 500);
+    return () => clearInterval(ci);
   }, []);
 
   const handleLogout = () => {
@@ -64,7 +75,7 @@ const Header = () => {
     { label: 'Супи',    icon: <FaMugHot />,     to: '/soups'      },
     { label: 'Салати',  icon: <FaCarrot />,     to: '/salads'     },
     { label: 'Закуски', icon: <FaCookieBite />, to: '/appetizers' },
-    { label: 'Напої',   icon: <FaGlassWhiskey /> , to: '/drinks'  },
+    { label: 'Напої',   icon: <FaGlassWhiskey/>, to: '/drinks'    },
   ];
 
   const toggleMobileMenu = () => {
@@ -85,7 +96,10 @@ const Header = () => {
             <button className="text-white text-2xl md:hidden" onClick={toggleMobileMenu}>
               ≡
             </button>
-            <Link to="/" className="text-white font-serif text-3xl tracking-widest font-bold no-underline">
+            <Link
+              to="/"
+              className="text-white font-serif text-3xl tracking-widest font-bold no-underline"
+            >
               Song Wu
             </Link>
           </div>
@@ -97,7 +111,7 @@ const Header = () => {
           <div className="flex items-center space-x-4">
             <button
               onClick={() => navigate('/search')}
-              className="text-white text-xl hover:text-gray-200 transition-colors"
+              className="text-white text-xl hover:text-gray-200 transition-colors no-underline"
             >
               <FaSearch />
             </button>
@@ -108,12 +122,12 @@ const Header = () => {
                 setProfileOpen(true);
               }}
               onMouseLeave={() => {
-                const timeout = setTimeout(() => setProfileOpen(false), 200);
-                setProfileTimeout(timeout);
+                const t = setTimeout(() => setProfileOpen(false), 200);
+                setProfileTimeout(t);
               }}
             >
               <button
-                className="flex items-center justify-center text-white text-xl hover:text-gray-200 transition-colors"
+                className="flex items-center justify-center text-white text-xl hover:text-gray-200 transition-colors no-underline"
                 onClick={() => window.innerWidth < 768 && setProfileOpen(!profileOpen)}
               >
                 <FaUserCircle />
@@ -121,30 +135,31 @@ const Header = () => {
               {profileOpen && (
                 <div className="absolute right-0 mt-2 w-44 bg-white text-gray-800 rounded shadow-md py-2 z-50">
                   {!isLoggedIn ? (
-                    <Link to="/login" className="block px-4 py-2 hover:bg-gray-100 no-underline" onClick={() => setProfileOpen(false)}>
+                    <Link to="/login" className="block px-4 py-2 hover:bg-gray-100 no-underline">
                       Увійти/Реєстрація
                     </Link>
+                  ) : userRole === 'admin' ? (
+                    <Link to="/admin" className="block px-4 py-2 hover:bg-gray-100 no-underline">
+                      Управління
+                    </Link>
                   ) : (
-                    <>
-                      {userRole === 'admin' ? (
-                        <Link to="/admin" className="block px-4 py-2 hover:bg-gray-100 no-underline" onClick={() => setProfileOpen(false)}>
-                          Управління
-                        </Link>
-                      ) : (
-                        <Link to="/profile" className="block px-4 py-2 hover:bg-gray-100 no-underline" onClick={() => setProfileOpen(false)}>
-                          Профіль
-                        </Link>
-                      )}
-                      <button onClick={handleLogout} className="block w-full text-left px-4 py-2 hover:bg-gray-100">
-                        Вийти
-                      </button>
-                    </>
+                    <Link to="/profile" className="block px-4 py-2 hover:bg-gray-100 no-underline">
+                      Профіль
+                    </Link>
+                  )}
+                  {isLoggedIn && (
+                    <button onClick={handleLogout} className="block w-full text-left px-4 py-2 hover:bg-gray-100">
+                      Вийти
+                    </button>
                   )}
                 </div>
               )}
             </div>
             <div className="relative">
-              <Link to="/cart" className="text-white text-xl hover:text-gray-200 transition-colors no-underline">
+              <Link
+                to="/cart"
+                className="text-white text-xl hover:text-gray-200 transition-colors no-underline"
+              >
                 <FaShoppingCart />
               </Link>
               {cartCount > 0 && (
@@ -198,7 +213,7 @@ const CategoryItem = ({ cat, onClickMobile, categoriesHovered }) => (
       onClick={onClickMobile}
       className="block md:hidden rounded-full bg-gray-800 hover:bg-gray-600 transition-colors text-white no-underline px-6 py-3 text-center mb-2"
     >
-      <div className="flex flex-col items-center justify-center">
+      <div className="flex flex-col items-center">
         <span className="text-2xl mb-1">{cat.icon}</span>
         <span className="text-base">{cat.label}</span>
       </div>

@@ -19,6 +19,7 @@ import AdminFoodsPage from './pages/AdminFoodsPage';
 import AdminUsersPage from './pages/AdminUsersPage';
 import AdminOrdersPage from './pages/AdminOrdersPage';
 import AdminReservationsPage from './pages/AdminReservationsPage';
+import AdminPromoCodesPage from './pages/AdminPromoCodesPage';
 
 function App() {
   return (
@@ -70,7 +71,14 @@ function App() {
                 </PrivateRoute>
               }
             />
-
+             <Route
+              path="/admin/promos"
+              element={
+                <PrivateRoute roleRequired="admin">
+                  <AdminPromoCodesPage />
+                </PrivateRoute>
+              }
+            />
             <Route
               path="/profile"
               element={

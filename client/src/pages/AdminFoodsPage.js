@@ -21,6 +21,7 @@ const AdminFoodsPage = () => {
   const [selectedCategory, setSelectedCategory] = useState(dishCategories[0].value);
   const [items, setItems] = useState([]);
   const [error, setError] = useState('');
+  const API = process.env.REACT_APP_API_URL || 'http://localhost:3002';
 
   const [formData, setFormData] = useState({
     name: '',
@@ -51,8 +52,8 @@ const AdminFoodsPage = () => {
       try {
         const endpoint =
           activeTab === 'dishes'
-            ? `${process.env.REACT_APP_API_URL}/api/dishes/${selectedCategory}`
-            : `${process.env.REACT_APP_API_URL}/api/drinks/${selectedCategory}`;
+            ? `${API}/api/dishes/${selectedCategory}`
+            : `${API}/api/drinks/${selectedCategory}`;
         const response = await fetch(endpoint, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -78,8 +79,8 @@ const AdminFoodsPage = () => {
     try {
       const endpoint =
         activeTab === 'dishes'
-          ? `${process.env.REACT_APP_API_URL}/api/dishes/${selectedCategory}`
-          : `${process.env.REACT_APP_API_URL}/api/drinks/${selectedCategory}`;
+          ? `${API}/api/dishes/${selectedCategory}`
+          : `${API}/api/drinks/${selectedCategory}`;
       const response = await fetch(endpoint, {
         method: 'POST',
         headers: {
@@ -102,8 +103,8 @@ const AdminFoodsPage = () => {
     try {
       const endpoint =
         activeTab === 'dishes'
-          ? `${process.env.REACT_APP_API_URL}/api/dishes/${selectedCategory}/${id}`
-          : `${process.env.REACT_APP_API_URL}/api/drinks/${selectedCategory}/${id}`;
+          ? `${API}/api/dishes/${selectedCategory}/${id}`
+          : `${API}/api/drinks/${selectedCategory}/${id}`;
       const response = await fetch(endpoint, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
@@ -131,8 +132,8 @@ const AdminFoodsPage = () => {
     try {
       const endpoint =
         activeTab === 'dishes'
-          ? `${process.env.REACT_APP_API_URL}/api/dishes/${selectedCategory}/${editingItem._id}`
-          : `${process.env.REACT_APP_API_URL}/api/drinks/${selectedCategory}/${editingItem._id}`;
+          ? `${API}/api/dishes/${selectedCategory}/${editingItem._id}`
+          : `${API}/api/drinks/${selectedCategory}/${editingItem._id}`;
       const response = await fetch(endpoint, {
         method: 'PATCH',
         headers: {

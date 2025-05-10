@@ -27,7 +27,7 @@ app.use('/api/dishes', dishRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/search', searchRouter);
 app.use('/api/reservations', reservationsRouter);
-
+app.use('/api/promos', require('./routes/promo'));
 
 app.use((err, req, res, next) => {
   const statusCode = res.statusCode === 200 ? 500 : res.statusCode;

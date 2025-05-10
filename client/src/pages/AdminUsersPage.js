@@ -1,4 +1,3 @@
-// AdminUsersPage.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,11 +11,11 @@ const AdminUsersPage = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const token = localStorage.getItem('authToken');
-
+  const API = process.env.REACT_APP_API_URL || 'http://localhost:3002';
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/users`, {
+        const response = await fetch(`${API}/api/users`, {
           headers: { Authorization: `Bearer ${token}` },
         });        
         if (!response.ok) {
@@ -34,7 +33,7 @@ const AdminUsersPage = () => {
   const deleteUser = async (userId) => {
     if (!window.confirm('Ви впевнені, що хочете видалити користувача?')) return;
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/users/${userId}`, {
+      const response = await fetch(`${API}/api/users/${userId}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       });

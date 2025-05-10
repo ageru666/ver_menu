@@ -3,6 +3,7 @@ import { FaMapMarkerAlt, FaPhone } from 'react-icons/fa';
 import InputMask from 'react-input-mask';
 
 const ContactsPage = () => {
+  const API = process.env.REACT_APP_API_URL || 'http://localhost:3002';
   const [reservationInfo, setReservationInfo] = useState({
     name: '',
     phone: '',
@@ -30,7 +31,7 @@ const ContactsPage = () => {
 
     setLoading(true);
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/reservations`, {
+      const response = await fetch(`${API}/api/reservations`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

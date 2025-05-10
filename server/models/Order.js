@@ -15,34 +15,63 @@ const OrderSchema = new mongoose.Schema({
 
   cart: [
     {
-      name: { type: String, required: true },
-      price: { type: Number, required: true },
+      name:     { type: String, required: true },
+      price:    { type: Number, required: true },
       quantity: { type: Number, required: true },
     },
   ],
-  total: { type: Number, required: true },
-  promoCode: { type: String },
-  timeOption: { type: String, required: true },
-  selectedTime: { type: String },
-  orderType: { type: String, required: true },
+
+  totalBeforeDiscount: {
+    type: Number,
+    required: true,
+  },
+
+  promoCode: {
+    type: String,
+    default: null,
+  },
+
+  discount: {
+    type: Number,
+    default: 0,
+  },
+
+  total: {
+    type: Number,
+    required: true,
+  },
+
+  timeOption:    { type: String, required: true },
+  selectedTime:  { type: String },
+  orderType:     { type: String, required: true },
   paymentMethod: { type: String, required: true },
+
   contactInfo: {
-    name: { type: String, required: true },
+    name:  { type: String, required: true },
     phone: { type: String, required: true },
     email: { type: String },
   },
+
   deliveryInfo: {
-    street: { type: String },
-    building: { type: String },
-    entrance: { type: String },
-    block: { type: String },
+    street:    { type: String },
+    building:  { type: String },
+    entrance:  { type: String },
+    block:     { type: String },
     apartment: { type: String },
-    floor: { type: String },
-    comment: { type: String },
+    floor:     { type: String },
+    comment:   { type: String },
   },
+
   status: {
     type: String,
-    enum: ['pending', 'confirmed', 'canceled', 'cooking', 'on delivery', 'delivered'],
+    enum: [
+      'pending',
+      'confirmed',
+      'canceled',
+      'cooking',
+      'on delivery',
+      'delivered',
+    ],
     default: 'pending',
     validate: {
       validator: function (value) {

@@ -9,6 +9,7 @@ const categoryLabels = {
 };
 
 const DrinksPage = () => {
+  const API = process.env.REACT_APP_API_URL || 'http://localhost:3002';
   const [drinksData, setDrinksData] = useState({
     cocktails: [],
     beer: [],
@@ -20,7 +21,7 @@ const DrinksPage = () => {
   useEffect(() => {
     const fetchDrinks = async (category) => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/drinks/${category}`);
+        const response = await fetch(`${API}/api/drinks/${category}`);
         if (!response.ok) {
           throw new Error(`Error fetching ${category}`);
         }

@@ -1,34 +1,74 @@
-const express = require('express');
-const router = express.Router();
-const Order = require('../models/Order');
+const express         = require('express');
+const router          = express.Router();
+const Order           = require('../models/Order');
 const optionalProtect = require('../utils/optionalProtect');
-const { protect } = require('../utils/authMiddleware'); 
+const { protect }     = require('../utils/authMiddleware');
+const { applyPromo, PromoError } = require('../utils/promo');
 
 function generateOrderNumber() {
-  const randomDigits = Math.floor(1000 + Math.random() * 9000);
-  return Date.now().toString() + randomDigits;
+  const random = Math.floor(1000 + Math.random() * 9000);
+  return Date.now().toString() + random;
 }
 
 router.post('/create', optionalProtect, async (req, res) => {
   try {
-    const newOrder = new Order({
-      ...req.body,
-      user: req.user?._id || null,
-    });
+    const {
+      cart,
+      promoCode,
+      timeOption,
+      selectedTime,
+      orderType,
+      paymentMethod,
+      contactInfo,
+      deliveryInfo
+    } = req.body;
 
-    newOrder.orderNumber = generateOrderNumber();
+    const totalBeforeDiscount = cart.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0
+    );
+
+    let discount = 0;
+    let finalTotal = totalBeforeDiscount;
+    try {
+      ({ discount, finalTotal } = await applyPromo(
+        totalBeforeDiscount,
+        promoCode
+      ));
+    } catch (err) {
+      if (err.name === 'PromoError') {
+        return res.status(400).json({ message: err.message });
+      }
+      throw err;
+    }
+
+    const newOrder = new Order({
+      orderNumber:        generateOrderNumber(),
+      user:               req.user?._id || null,
+      cart,
+      totalBeforeDiscount,
+      promoCode:          promoCode || null,
+      discount,
+      total:              finalTotal,
+      timeOption,
+      selectedTime,
+      orderType,
+      paymentMethod,
+      contactInfo,
+      deliveryInfo:       orderType === 'Самовивіз' ? {} : deliveryInfo,
+    });
 
     await newOrder.save();
 
     return res.status(201).json({
-      message: 'Замовлення успішно створено!',
+      message:     'Замовлення успішно створено!',
       orderNumber: newOrder.orderNumber,
     });
   } catch (error) {
     console.error('Error creating order:', error);
     return res.status(500).json({
       message: 'Помилка при створенні замовлення',
-      error: error.message,
+      error:   error.message,
     });
   }
 });

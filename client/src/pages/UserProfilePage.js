@@ -1,16 +1,26 @@
 import React, { useEffect, useState } from 'react';
 
+const statuses = [
+  { value: 'pending',     label: 'Очікується'   },
+  { value: 'confirmed',   label: 'Підтверджено' },
+  { value: 'cooking',     label: 'Готується'    },
+  { value: 'on delivery', label: 'У дорозі'     },
+  { value: 'delivered',   label: 'Доставлено'   },
+  { value: 'canceled',    label: 'Скасовано'    },
+];
+
 const UserProfilePage = () => {
+  const API = process.env.REACT_APP_API_URL || 'http://localhost:3002';
   const [orders, setOrders] = useState([]);
   const [error, setError] = useState('');
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
-
+  
   useEffect(() => {
     const token = localStorage.getItem('authToken');
     const fetchMyOrders = async () => {
       try {
-        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/orders/my`, {
+        const res = await fetch(`${API}/api/orders/my`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -66,7 +76,9 @@ const UserProfilePage = () => {
                   <td className="border border-gray-300 px-4 py-2">
                     {order.orderNumber || order._id}
                   </td>
-                  <td className="border border-gray-300 px-4 py-2">{order.status}</td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {statuses.find(s => s.value === order.status)?.label || order.status}
+                  </td>
                   <td className="border border-gray-300 px-4 py-2">
                     {order.total?.toFixed(2)}
                   </td>
@@ -97,11 +109,11 @@ const UserProfilePage = () => {
             </button>
             <div className="space-y-3">
               <p>
-                <span className="font-medium">Номер замовлення:</span>{' '}
+                <span className="font-medium">Номер замовлення:</span> {' '}
                 {selectedOrder.orderNumber || selectedOrder._id}
               </p>
               <p>
-                <span className="font-medium">Статус:</span> {selectedOrder.status}
+                <span className="font-medium">Статус:</span> {statuses.find(s => s.value === selectedOrder.status)?.label || selectedOrder.status}
               </p>
               <p>
                 <span className="font-medium">Сума:</span> {selectedOrder.total?.toFixed(2)} грн

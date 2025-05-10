@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 const SearchPage = () => {
+  const API = process.env.REACT_APP_API_URL || 'http://localhost:3002';
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -14,7 +15,13 @@ const SearchPage = () => {
   const addToCart = (item) => {
     setCart((prevCart) => {
       const updatedCart = [...prevCart, item];
-      localStorage.setItem('cart', JSON.stringify(updatedCart));
+      localStorage.setItem(
+        'cart',
+        JSON.stringify({
+          items: updatedCart,
+          timestamp: Date.now(),
+        })
+      );      
       return updatedCart;
     });
   };
@@ -28,7 +35,7 @@ const SearchPage = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/search?query=${encodeURIComponent(query)}`);
+      const response = await fetch(`${API}/api/search?query=${encodeURIComponent(query)}`);
       console.log('Статус відповіді:', response.status);
       if (!response.ok) {
         throw new Error(`Помилка запиту: ${response.status}`);

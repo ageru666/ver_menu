@@ -1,8 +1,8 @@
-// src/pages/LoginPage.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
+  const API = process.env.REACT_APP_API_URL || 'http://localhost:3002';
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({ name: '', email: '', password: '' });
   const [error, setError] = useState('');
@@ -20,7 +20,7 @@ const LoginPage = () => {
 
     const endpoint = isLogin ? '/api/users/login' : '/api/users/register';
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}${endpoint}`, {
+      const response = await fetch(`${API}${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),

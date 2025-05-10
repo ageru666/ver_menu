@@ -12,7 +12,7 @@ const statuses = [
   { value: 'pending',     label: 'Очікується'   },
   { value: 'confirmed',   label: 'Підтверджено' },
   { value: 'cooking',     label: 'Готується'    },
-  { value: 'on delivery', label: 'У дорозі'   },
+  { value: 'on delivery', label: 'У дорозі'     },
   { value: 'delivered',   label: 'Доставлено'   },
   { value: 'canceled',    label: 'Скасовано'    },
 ];
@@ -26,11 +26,12 @@ const AdminOrdersPage = () => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const navigate = useNavigate();
   const token = localStorage.getItem('authToken');
+  const API = process.env.REACT_APP_API_URL || 'http://localhost:3002';
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/orders`, {
+        const response = await fetch(`${API}/api/orders`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!response.ok) throw new Error('Не вдалося завантажити замовлення');
@@ -60,7 +61,7 @@ const AdminOrdersPage = () => {
     const label = statuses.find(s => s.value === newStatus)?.label;
     if (!window.confirm(`Ви впевнені, що хочете змінити статус на "${label}"?`)) return;
     try {
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/orders/${orderId}`, {
+      const res = await fetch(`${API}/api/orders/${orderId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -78,6 +79,7 @@ const AdminOrdersPage = () => {
 
   const handleShowDetails = (order, e) => {
     e.stopPropagation();
+    console.log('Order payload:', order);
     setSelectedOrder(order);
     setShowDetailsModal(true);
   };
@@ -87,12 +89,21 @@ const AdminOrdersPage = () => {
     setSelectedOrder(null);
   };
 
+  const formatAddress = (deliveryInfo) => {
+    if (!deliveryInfo) return 'Не вказано';
+    const parts = [];
+    if (deliveryInfo.street)    parts.push(`вул. ${deliveryInfo.street}`);
+    if (deliveryInfo.building)  parts.push(`буд. ${deliveryInfo.building}`);
+    if (deliveryInfo.corpus)    parts.push(`корп. ${deliveryInfo.corpus}`);
+    if (deliveryInfo.apartment) parts.push(`кв. ${deliveryInfo.apartment}`);
+    return parts.length ? parts.join(', ') : 'Не повна адреса';
+  };
+
   return (
     <div className="container mx-auto py-8 space-y-8">
       <h1 className="text-3xl font-bold text-center">Адміністрування замовлень</h1>
       {error && <p className="text-red-500 text-center">{error}</p>}
 
-      {/* Активні замовлення */}
       <div className="bg-white p-4 rounded shadow-md">
         <div className="flex justify-between items-center border-b pb-2 mb-4">
           <h2 className="text-2xl font-semibold">Активні замовлення</h2>
@@ -109,7 +120,7 @@ const AdminOrdersPage = () => {
               <thead>
                 <tr className="bg-gray-100">
                   <th className="border px-4 py-2">№ замовлення</th>
-                  <th className="border px-4 py-2">Ім’я</th>
+                  <th className="border px-4 py-2">Ім'я</th>
                   <th className="border px-4 py-2">Статус</th>
                   <th className="border px-4 py-2">Сума (грн)</th>
                   <th className="border px-4 py-2">Дії</th>
@@ -182,7 +193,7 @@ const AdminOrdersPage = () => {
               <thead>
                 <tr className="bg-gray-100">
                   <th className="border px-4 py-2">№ замовлення</th>
-                  <th className="border px-4 py-2">Ім’я</th>
+                  <th className="border px-4 py-2">Ім'я</th>
                   <th className="border px-4 py-2">Статус</th>
                   <th className="border px-4 py-2">Сума (грн)</th>
                   <th className="border px-4 py-2">Дії</th>
@@ -195,17 +206,21 @@ const AdminOrdersPage = () => {
                     <td className="border px-4 py-2">{order.contactInfo?.name}</td>
                     <td className="border px-4 py-2">
                       <span
-                        className={
-                          order.status === 'delivered'
-                            ? 'text-green-600 font-semibold'
-                            : 'text-red-600 font-semibold'
-                        }
+                        className={order.status === 'delivered'
+                          ? 'text-green-600 font-semibold'
+                          : 'text-red-600 font-semibold'}
                       >
                         {statuses.find(s => s.value === order.status)?.label}
                       </span>
                     </td>
                     <td className="border px-4 py-2 text-right">{order.total?.toFixed(2)}</td>
-                    <td className="border px-4 py-2 text-center">
+                    <td className="border px-4 py-2 text-center space-x-2 ">
+                      <button
+                        onClick={e => handleShowDetails(order, e)}
+                        className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-sm mb-2"
+                      >
+                        Деталі
+                      </button>
                       <button
                         onClick={() => updateOrderStatus(order._id, 'pending')}
                         className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 text-sm"
@@ -227,76 +242,139 @@ const AdminOrdersPage = () => {
           </div>
         )}
       </div>
-
-      {/* Модалка з деталями */}
-      {showDetailsModal && selectedOrder && (
-  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-    <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md relative">
-      <h3 className="text-xl font-bold mb-4">Деталі замовлення</h3>
-      <button onClick={closeModal} className="absolute top-2 right-2 text-gray-400 hover:text-gray-700">
-        ✕
-      </button>
-      <div className="space-y-3">
-        <p><span className="font-medium">№ замовлення:</span> {selectedOrder.orderNumber || selectedOrder._id}</p>
-        <p><span className="font-medium">Тип замовлення:</span> {selectedOrder.orderType === 'delivery' ? 'Доставка' : 'Самовивіз'}</p>
-        <p><span className="font-medium">Час:</span> {selectedOrder.timeType === 'ready' ? 'По готовності' : `На ${selectedOrder.time}`}</p>
-        <p><span className="font-medium">Оплата:</span> {selectedOrder.paymentMethod === 'cash' ? 'Готівкою кур\'єру' : 'Карткою кур\'єру'}</p>
-        <p><span className="font-medium">Статус:</span> {statuses.find(s => s.value === selectedOrder.status)?.label}</p>
-        <p><span className="font-medium">Сума:</span> {selectedOrder.total?.toFixed(2)} грн</p>
-
-        {/* контактна інформація */}
-        {selectedOrder.contactInfo && (
-          <>
-            <p><span className="font-medium">Ім’я:</span> {selectedOrder.contactInfo.name}</p>
-            <p><span className="font-medium">Телефон:</span> {selectedOrder.contactInfo.phone}</p>
-            {selectedOrder.contactInfo.email && (
-              <p><span className="font-medium">Email:</span> {selectedOrder.contactInfo.email}</p>
-            )}
-          </>
-        )}
-
-        {/* адреса доставки */}
-        {selectedOrder.orderType === 'delivery' && selectedOrder.deliveryInfo && (
-          <>
-            <p><span className="font-medium">Вулиця:</span> {selectedOrder.deliveryInfo.street}</p>
-            <p><span className="font-medium">Будинок:</span> {selectedOrder.deliveryInfo.building}</p>
-            {selectedOrder.deliveryInfo.corpus && (
-              <p><span className="font-medium">Корпус:</span> {selectedOrder.deliveryInfo.corpus}</p>
-            )}
-            {selectedOrder.deliveryInfo.apartment && (
-              <p><span className="font-medium">Квартира:</span> {selectedOrder.deliveryInfo.apartment}</p>
-            )}
-            {selectedOrder.deliveryInfo.floor && (
-              <p><span className="font-medium">Поверх:</span> {selectedOrder.deliveryInfo.floor}</p>
-            )}
-            {selectedOrder.deliveryInfo.entrance && (
-              <p><span className="font-medium">Під’їзд:</span> {selectedOrder.deliveryInfo.entrance}</p>
-            )}
-            {selectedOrder.deliveryInfo.comment && (
-              <p><span className="font-medium">Коментар:</span> {selectedOrder.deliveryInfo.comment}</p>
-            )}
-          </>
-        )}
-
-        {/* список товарів */}
-        {selectedOrder.cart && selectedOrder.cart.length > 0 && (
-          <div>
-            <h4 className="font-semibold">Склад замовлення:</h4>
-            <ul className="list-disc list-inside">
-              {selectedOrder.cart.map((item, idx) => (
-                <li key={idx}>
-                  {item.name} × {item.quantity} = {(item.price * item.quantity).toFixed(2)} грн
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </div>
-
-      <div className="mt-5 text-right">
+ 
+{/* Модалка з деталями */}
+{showDetailsModal && selectedOrder && (
+  <div
+    className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4 overflow-auto"
+    onClick={closeModal}
+  >
+    <div
+      className="bg-white rounded-lg shadow-lg w-full max-w-md max-h-[90vh] overflow-y-auto p-6 relative"
+      onClick={e => e.stopPropagation()}
+    >
+      <div className="flex justify-between items-center border-b pb-3 mb-4">
+        <h3 className="text-xl font-bold">Деталі замовлення</h3>
         <button
           onClick={closeModal}
-          className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
+          className="text-gray-400 hover:text-gray-700 text-2xl leading-none"
+        >
+          &times;
+        </button>
+      </div>
+
+      <div className="space-y-3 text-gray-800">
+        <p>
+          <span className="font-medium">№ замовлення:</span>{' '}
+          {selectedOrder.orderNumber || selectedOrder._id}
+        </p>
+
+        <p>
+          <span className="font-medium">Тип замовлення:</span>{' '}
+          {selectedOrder.orderType === 'Доставка' ? 'Доставка' : 'Самовивіз'}
+        </p>
+
+        <p>
+          <span className="font-medium">Час:</span>{' '}
+          {selectedOrder.timeOption === 'На час'
+            ? selectedOrder.selectedTime
+            : 'По готовності'}
+        </p>
+
+        <p>
+          <span className="font-medium">Оплата:</span>{' '}
+          {selectedOrder.paymentMethod}
+        </p>
+
+        <p>
+          <span className="font-medium">Статус:</span>{' '}
+          {statuses.find(s => s.value === selectedOrder.status)?.label}
+        </p>
+
+        <p>
+          <span className="font-medium">Сума:</span>{' '}
+          {selectedOrder.total?.toFixed(2)} грн
+        </p>
+
+        <h4 className="font-semibold mt-4">Контактна інформація</h4>
+        <p>
+          <span className="font-medium">Ім'я:</span>{' '}
+          {selectedOrder.contactInfo?.name || '—'}
+        </p>
+        <p>
+          <span className="font-medium">Телефон:</span>{' '}
+          {selectedOrder.contactInfo?.phone || '—'}
+        </p>
+        {selectedOrder.contactInfo?.email && (
+          <p>
+            <span className="font-medium">Email:</span>{' '}
+            {selectedOrder.contactInfo.email}
+          </p>
+        )}
+
+        {selectedOrder.orderType === 'Доставка' && selectedOrder.deliveryInfo && (
+          <>
+            <h4 className="font-semibold mt-4">Адреса доставки</h4>
+            {selectedOrder.deliveryInfo.street && (
+              <p>
+                <span className="font-medium">Вулиця:</span>{' '}
+                {selectedOrder.deliveryInfo.street}
+              </p>
+            )}
+            {selectedOrder.deliveryInfo.building && (
+              <p>
+                <span className="font-medium">Будинок:</span>{' '}
+                {selectedOrder.deliveryInfo.building}
+              </p>
+            )}
+            {selectedOrder.deliveryInfo.corpus && (
+              <p>
+                <span className="font-medium">Корпус:</span>{' '}
+                {selectedOrder.deliveryInfo.corpus}
+              </p>
+            )}
+            {selectedOrder.deliveryInfo.apartment && (
+              <p>
+                <span className="font-medium">Квартира:</span>{' '}
+                {selectedOrder.deliveryInfo.apartment}
+              </p>
+            )}
+            {selectedOrder.deliveryInfo.floor && (
+              <p>
+                <span className="font-medium">Поверх:</span>{' '}
+                {selectedOrder.deliveryInfo.floor}
+              </p>
+            )}
+            {selectedOrder.deliveryInfo.entrance && (
+              <p>
+                <span className="font-medium">Під’їзд:</span>{' '}
+                {selectedOrder.deliveryInfo.entrance}
+              </p>
+            )}
+            {selectedOrder.deliveryInfo.comment && (
+              <p>
+                <span className="font-medium">Коментар:</span>{' '}
+                {selectedOrder.deliveryInfo.comment}
+              </p>
+            )}
+          </>
+        )}
+
+        <h4 className="font-semibold mt-4">Склад замовлення</h4>
+        <ul className="list-disc list-inside">
+          {selectedOrder.cart.map((item, idx) => (
+            <li key={idx}>
+              {item.name} × {item.quantity} ={' '}
+              {(item.price * item.quantity).toFixed(2)} грн
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="flex justify-end border-t pt-4">
+        <button
+          onClick={closeModal}
+          className="bg-gray-300 text-gray-800 py-2 px-4 rounded hover:bg-gray-400"
         >
           Закрити
         </button>
@@ -304,7 +382,6 @@ const AdminOrdersPage = () => {
     </div>
   </div>
 )}
-
 
       <div className="text-center mt-6">
         <button
