@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Reservation = require('../models/Reservation');
+const { protect, adminOnly } = require('../utils/authMiddleware');
 
 router.post('/', async (req, res) => {
   try {
@@ -20,7 +21,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.get('/', async (req, res) => {
+router.get('/', protect, adminOnly, async (req, res) => {
   try {
     const reservations = await Reservation.find().sort({ createdAt: -1 });
     res.json(reservations);
@@ -30,7 +31,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.patch('/:id', async (req, res) => {
+router.patch('/:id', protect, adminOnly, async (req, res) => {
   try {
     const { status } = req.body;
     if (!['active', 'completed', 'canceled'].includes(status)) {

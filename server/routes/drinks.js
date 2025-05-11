@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const getDrinkModelForCategory = require('../utils/getDrinkModelForCategory');
+const { protect, adminOnly } = require('../utils/authMiddleware');
 
 const categories = ['cocktails', 'beer', 'wine', 'spirits', 'coffee'];
 
@@ -28,7 +29,7 @@ router.get('/:category?', async (req, res) => {
   }
 });
 
-router.post('/:category', async (req, res) => {
+router.post('/:category', protect, adminOnly, async (req, res) => {
   const { category } = req.params;
   if (!categories.includes(category)) {
     return res.status(400).json({ message: 'Invalid category' });
@@ -43,7 +44,7 @@ router.post('/:category', async (req, res) => {
   }
 });
 
-router.patch('/:category/:id', async (req, res) => {
+router.patch('/:category/:id', protect, adminOnly, async (req, res) => {
   const { category, id } = req.params;
   if (!categories.includes(category)) {
     return res.status(400).json({ message: 'Invalid category' });
@@ -60,7 +61,7 @@ router.patch('/:category/:id', async (req, res) => {
   }
 });
 
-router.delete('/:category/:id', async (req, res) => {
+router.delete('/:category/:id', protect, adminOnly, async (req, res) => {
   const { category, id } = req.params;
   if (!categories.includes(category)) {
     return res.status(400).json({ message: 'Invalid category' });

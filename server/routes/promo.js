@@ -2,8 +2,9 @@ const express = require('express');
 const router = express.Router();
 const PromoCode = require('../models/PromoCode');
 const { applyPromo, PromoError } = require('../utils/promo');
+const { protect, adminOnly } = require('../utils/authMiddleware');
 
-router.get('/', async (req, res) => {
+router.get('/', protect, adminOnly, async (req, res) => {
   try {
     const codes = await PromoCode.find().sort({ createdAt: -1 });
     res.json(codes);
@@ -13,7 +14,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', protect, adminOnly, async (req, res) => {
   try {
     const { code, discountType, amount, expiresAt, usageLimit } = req.body;
     const promo = new PromoCode({
@@ -34,7 +35,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', protect, adminOnly, async (req, res) => {
   try {
     const { id } = req.params;
     const deleted = await PromoCode.findByIdAndDelete(id);

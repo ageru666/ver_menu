@@ -1,6 +1,6 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
+const express       = require('express');
+const mongoose      = require('mongoose');
+const cors          = require('cors');
 require('dotenv').config();
 
 const app = express();
@@ -13,21 +13,13 @@ mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.error('MongoDB connection error:', err));
 
-
-const drinkRoutes = require('./routes/drinks');
-const userRoutes = require('./routes/users'); 
-const dishRoutes = require('./routes/dishes'); 
-const orderRoutes = require('./routes/orders');
-const searchRouter = require('./routes/search');
-const reservationsRouter = require('./routes/reservations');
-
-app.use('/api/drinks', drinkRoutes);
-app.use('/api/users', userRoutes); 
-app.use('/api/dishes', dishRoutes); 
-app.use('/api/orders', orderRoutes);
-app.use('/api/search', searchRouter);
-app.use('/api/reservations', reservationsRouter);
+app.use('/api/drinks', require('./routes/drinks'));
+app.use('/api/dishes', require('./routes/dishes'));
+app.use('/api/orders', require('./routes/orders'));
+app.use('/api/search', require('./routes/search'));
+app.use('/api/reservations', require('./routes/reservations'));
 app.use('/api/promos', require('./routes/promo'));
+app.use('/api/users', require('./routes/users')); 
 
 app.use((err, req, res, next) => {
   const statusCode = res.statusCode === 200 ? 500 : res.statusCode;

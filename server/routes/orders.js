@@ -2,7 +2,7 @@ const express         = require('express');
 const router          = express.Router();
 const Order           = require('../models/Order');
 const optionalProtect = require('../utils/optionalProtect');
-const { protect }     = require('../utils/authMiddleware');
+const { protect, adminOnly } = require('../utils/authMiddleware');
 const { applyPromo, PromoError } = require('../utils/promo');
 
 function generateOrderNumber() {
@@ -73,7 +73,7 @@ router.post('/create', optionalProtect, async (req, res) => {
   }
 });
 
-router.get('/', async (req, res) => {
+router.get('/', protect, adminOnly, async (req, res) => {
   try {
     const orders = await Order.find({});
     res.json(orders);
@@ -82,7 +82,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.patch('/:id', async (req, res) => {
+router.patch('/:id', protect, adminOnly, async (req, res) => {
   try {
     const { id } = req.params;
     const updates = req.body;
