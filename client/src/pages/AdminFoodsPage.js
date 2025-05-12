@@ -27,6 +27,7 @@ const AdminFoodsPage = () => {
     name: '',
     price: '',
     weight: '',
+    volume: '',
     ingredients: '',
     image: '',
   });
@@ -41,6 +42,7 @@ const AdminFoodsPage = () => {
         name: '',
         price: '',
         weight: '',
+        volume: '',
         ingredients: '',
         image: '',
       });
@@ -92,7 +94,7 @@ const AdminFoodsPage = () => {
       if (!response.ok) throw new Error('Failed to add item');
       const newItem = await response.json();
       setItems((prev) => [...prev, newItem]);
-      setFormData({ name: '', price: '', weight: '', ingredients: '', image: '' });
+      setFormData({ name: '', price: '', weight: '', volume: '', ingredients: '', image: '' });
     } catch (err) {
       setError(err.message);
     }
@@ -122,6 +124,7 @@ const AdminFoodsPage = () => {
       name: item.name ?? '',
       price: item.price ?? '',
       weight: item.weight ?? '',
+      volume: item.volume ?? '',
       ingredients: item.ingredients ?? '',
       image: item.image ?? '',
     });
@@ -148,7 +151,7 @@ const AdminFoodsPage = () => {
         prev.map((itm) => (itm._id === updatedItem._id ? updatedItem : itm))
       );
       setEditingItem(null);
-      setFormData({ name: '', price: '', weight: '', ingredients: '', image: '' });
+      setFormData({ name: '', price: '', weight: '', volume: '', ingredients: '', image: '' });
     } catch (err) {
       setError(err.message);
     }
@@ -156,7 +159,7 @@ const AdminFoodsPage = () => {
 
   const handleCancelEdit = () => {
     setEditingItem(null);
-    setFormData({ name: '', price: '', weight: '', ingredients: '', image: '' });
+    setFormData({ name: '', price: '', weight: '', volume: '', ingredients: '', image: '' });
   };
 
   return (
@@ -229,7 +232,9 @@ const AdminFoodsPage = () => {
                 <tr className="bg-gray-100">
                   <th className="border border-gray-300 px-4 py-2">Назва</th>
                   <th className="border border-gray-300 px-4 py-2">Ціна</th>
-                  <th className="border border-gray-300 px-4 py-2">Вага</th>
+                  <th className="border border-gray-300 px-4 py-2">
+                    {activeTab === 'dishes' ? 'Вага' : 'Об’єм'}
+                  </th>
                   <th className="border border-gray-300 px-4 py-2">Інгредієнти</th>
                   <th className="border border-gray-300 px-4 py-2">Фото</th>
                   <th className="border border-gray-300 px-4 py-2">Дії</th>
@@ -240,7 +245,9 @@ const AdminFoodsPage = () => {
                   <tr key={item._id} className="hover:bg-gray-50">
                     <td className="border border-gray-300 px-4 py-2">{item.name}</td>
                     <td className="border border-gray-300 px-4 py-2">{item.price}</td>
-                    <td className="border border-gray-300 px-4 py-2">{item.weight}</td>
+                    <td className="border border-gray-300 px-4 py-2">
+                      {isDishTab ? item.weight : item.volume}
+                    </td>
                     <td className="border border-gray-300 px-4 py-2">{item.ingredients}</td>
                     <td className="border border-gray-300 px-4 py-2">
                       <img
@@ -249,9 +256,9 @@ const AdminFoodsPage = () => {
                         className="w-16 h-16 object-cover"
                       />
                     </td>
-                    <td className="border border-gray-300 px-4 py-2 text-center space-y-2 space-x-2">
+                    <td className="border border-gray-300 px-4 py-2 text-center">
                       <button
-                        className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 transition text-sm"
+                        className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 transition text-sm mr-2"
                         onClick={() => handleEditItem(item)}
                       >
                         Змінити
@@ -289,7 +296,7 @@ const AdminFoodsPage = () => {
               value={formData.name}
               onChange={handleInputChange}
               className="w-full border border-gray-300 p-2 rounded"
-              required={!editingItem} 
+              required
             />
           </div>
           <div>
@@ -300,11 +307,11 @@ const AdminFoodsPage = () => {
               value={formData.price}
               onChange={handleInputChange}
               className="w-full border border-gray-300 p-2 rounded"
-              required={!editingItem} 
+              required
             />
           </div>
-          
-          {isDishTab && (
+
+          {isDishTab ? (
             <>
               <div>
                 <label className="block text-sm font-medium mb-1">Вага:</label>
@@ -314,7 +321,7 @@ const AdminFoodsPage = () => {
                   value={formData.weight}
                   onChange={handleInputChange}
                   className="w-full border border-gray-300 p-2 rounded"
-                  required={!editingItem} 
+                  required
                 />
               </div>
               <div>
@@ -324,23 +331,20 @@ const AdminFoodsPage = () => {
                   value={formData.ingredients}
                   onChange={handleInputChange}
                   className="w-full border border-gray-300 p-2 rounded"
-                  required={!editingItem} 
-                ></textarea>
+                  required
+                />
               </div>
             </>
-          )}
-
-          {!isDishTab && (
+          ) : (
             <>
               <div>
-                <label className="block text-sm font-medium mb-1">Вага (необов'язково):</label>
+                <label className="block text-sm font-medium mb-1">Об’єм (мл):</label>
                 <input
                   type="text"
-                  name="weight"
-                  value={formData.weight}
+                  name="volume"
+                  value={formData.volume}
                   onChange={handleInputChange}
                   className="w-full border border-gray-300 p-2 rounded"
-                  required={false}
                 />
               </div>
               <div>
@@ -350,8 +354,7 @@ const AdminFoodsPage = () => {
                   value={formData.ingredients}
                   onChange={handleInputChange}
                   className="w-full border border-gray-300 p-2 rounded"
-                  required={false}
-                ></textarea>
+                />
               </div>
             </>
           )}
@@ -364,7 +367,7 @@ const AdminFoodsPage = () => {
               value={formData.image}
               onChange={handleInputChange}
               className="w-full border border-gray-300 p-2 rounded"
-              required={!editingItem} 
+              required
             />
           </div>
 
