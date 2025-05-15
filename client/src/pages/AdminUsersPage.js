@@ -8,6 +8,11 @@ const roleLabels = {
 
 const AdminUsersPage = () => {
   const [users, setUsers] = useState([]);
+    const sortedUsers = [...users].sort((a, b) => {
+    if (a.role === 'admin' && b.role !== 'admin') return -1;
+    if (a.role !== 'admin' && b.role === 'admin') return 1;
+    return a.name.localeCompare(b.name);
+  });
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const token = localStorage.getItem('authToken');
@@ -84,7 +89,7 @@ const AdminUsersPage = () => {
             </tr>
           </thead>
           <tbody>
-            {users.map((user) => (
+            {sortedUsers.map((user) => (
               <tr key={user._id} className="hover:bg-gray-50">
                 <td className="border border-gray-300 px-4 py-2">{user.name}</td>
                 <td className="border border-gray-300 px-4 py-2">{user.email}</td>
