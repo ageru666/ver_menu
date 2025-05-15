@@ -46,6 +46,25 @@ const AdminUsersPage = () => {
     }
   };
 
+  
+  const updateRole = async (userId, newRole) => {
+   try {
+     const res = await fetch(`${API}/api/users/${userId}`, {
+       method: 'PATCH',
+       headers: {
+         'Content-Type': 'application/json',
+         Authorization: `Bearer ${token}`,
+       },
+       body: JSON.stringify({ role: newRole }),
+     });
+     if (!res.ok) throw new Error('Не вдалося оновити роль');
+     const updated = await res.json();
+     setUsers(prev => prev.map(u => u._id === updated._id ? updated : u));
+   } catch (err) {
+     alert(err.message);
+   }
+  };
+
   return (
     <div className="container mx-auto py-8 space-y-8">
       <h1 className="text-3xl font-bold text-center mb-6">
@@ -70,7 +89,14 @@ const AdminUsersPage = () => {
                 <td className="border border-gray-300 px-4 py-2">{user.name}</td>
                 <td className="border border-gray-300 px-4 py-2">{user.email}</td>
                 <td className="border border-gray-300 px-4 py-2">
-                  {roleLabels[user.role] || user.role}
+                 <select
+                   value={user.role}
+                   onChange={e => updateRole(user._id, e.target.value)}
+                   className="border rounded p-1 text-sm"
+                 >
+                   <option value="visitor">Користувач</option>
+                   <option value="admin">Адміністратор</option>
+                 </select>
                 </td>
                 <td className="border border-gray-300 px-4 py-2 text-center">
                   <button

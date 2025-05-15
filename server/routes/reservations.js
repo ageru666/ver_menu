@@ -52,4 +52,16 @@ router.patch('/:id', protect, adminOnly, async (req, res) => {
   }
 });
 
+router.delete('/:id', protect, adminOnly, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deleted = await Reservation.findByIdAndDelete(id);
+    if (!deleted) return res.status(404).json({ message: 'Бронювання не знайдено' });
+    return res.json({ message: 'Бронювання видалено' });
+  } catch (err) {
+    console.error('Error deleting reservation:', err);
+    return res.status(500).json({ message: 'Помилка сервера' });
+  }
+});
+
 module.exports = router;

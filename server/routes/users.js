@@ -106,4 +106,26 @@ router.delete('/:id', protect, adminOnly, async (req, res) => {
   }
 });
 
+router.patch('/:id', protect, adminOnly, async (req, res) => {
+  try {
+    const { role } = req.body;
+    if (!['visitor', 'admin'].includes(role)) {
+      return res.status(400).json({ message: 'Невірна роль' });
+    }
+    const updated = await User.findByIdAndUpdate(
+      req.params.id,
+      { role },
+      { new: true }
+    ).select('-password');
+    if (!updated) {
+      return res.status(404).json({ message: 'Користувача не знайдено' });
+    }
+    res.json(updated);
+  } catch (err) {
+    console.error('Error updating user role:', err);
+    res.status(500).json({ message: 'Помилка сервера' });
+  }
+});
+
+
 module.exports = router;

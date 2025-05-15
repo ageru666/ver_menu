@@ -62,6 +62,21 @@ const AdminReservationsPage = () => {
     }
   };
 
+const deleteReservation = async (id) => {
+  if (!window.confirm('Видалити це бронювання назавжди?')) return;
+  try {
+    const res = await fetch(`${API}/api/reservations/${id}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (!res.ok) throw new Error('Не вдалося видалити бронювання');
+    setReservations(prev => prev.filter(r => r._id !== id));
+  } catch (err) {
+    alert(err.message);
+  }
+};
+
+
   const activeReservations = reservations
     .filter(r => !r.status || r.status === 'active')
     .sort((a, b) => {
@@ -207,12 +222,18 @@ const AdminReservationsPage = () => {
                         {statuses.find(s => s.value === r.status)?.label}
                       </span>
                     </td>
-                    <td className="border px-4 py-2 text-center">
+                    <td className="border px-4 py-2 text-center space-x-2">
                       <button
                         onClick={() => updateStatus(r._id, 'active')}
-                        className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 text-sm"
+                        className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 text-sm mb-2"
                       >
                         Повернути
+                      </button>
+                      <button
+                        onClick={() => deleteReservation(r._id)}
+                        className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm"
+                      >
+                        Видалити
                       </button>
                     </td>
                   </tr>
