@@ -20,6 +20,7 @@ import AdminUsersPage from './pages/AdminUsersPage';
 import AdminOrdersPage from './pages/AdminOrdersPage';
 import AdminReservationsPage from './pages/AdminReservationsPage';
 import AdminPromoCodesPage from './pages/AdminPromoCodesPage';
+import NotFoundPage from './pages/NotFoundPage';
 
 function App() {
   return (
@@ -29,8 +30,9 @@ function App() {
         <main className="flex-grow-1">
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="*" element={<NotFoundPage />} />
             <Route path="/login" element={<LoginPage />} />
-
+            
             <Route
               path="/admin"
               element={
