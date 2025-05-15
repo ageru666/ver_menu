@@ -15,7 +15,7 @@ const AdminDashboard = () => {
           Адміністрування користувачів
         </button>
         <button
-          onClick={() => navigate('/admin/foods')}
+          onClick={() => navigate('/admin/menu')}
           className="bg-indigo-600 text-white px-6 py-3 rounded-lg shadow hover:bg-indigo-700 transition"
         >
           Адміністрування страв та напоїв

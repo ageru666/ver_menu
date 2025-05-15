@@ -42,7 +42,7 @@ function App() {
               }
             />
              <Route
-             path="/admin/foods"
+             path="/admin/menu"
              element={
             <PrivateRoute roleRequired="admin">
              <AdminFoodsPage />
