@@ -77,6 +77,21 @@ const AdminOrdersPage = () => {
     }
   };
 
+  const deleteOrder = async (orderId) => {
+  if (!window.confirm('Видалити це замовлення назавжди?')) return;
+  try {
+    const res = await fetch(`${API}/api/orders/${orderId}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (!res.ok) throw new Error('Не вдалося видалити замовлення');
+    setOrders(prev => prev.filter(o => o._id !== orderId));
+  } catch (err) {
+    alert(err.message);
+  }
+};
+
+
   const handleShowDetails = (order, e) => {
     e.stopPropagation();
     console.log('Order payload:', order);
@@ -120,6 +135,7 @@ const AdminOrdersPage = () => {
               <thead>
                 <tr className="bg-gray-100">
                   <th className="border px-4 py-2">№ замовлення</th>
+                  <th className="border px-4 py-2">Дата</th>
                   <th className="border px-4 py-2">Ім'я</th>
                   <th className="border px-4 py-2">Статус</th>
                   <th className="border px-4 py-2">Сума (грн)</th>
@@ -130,6 +146,9 @@ const AdminOrdersPage = () => {
                 {activeOrders.map(order => (
                   <tr key={order._id} className="hover:bg-gray-50">
                     <td className="border px-4 py-2">{order.orderNumber || order._id}</td>
+                    <td className="border px-4 py-2">
+                      {new Date(order.createdAt).toLocaleString()}
+                    </td>
                     <td className="border px-4 py-2">{order.contactInfo?.name}</td>
                     <td className="border px-4 py-2">
                       <select
@@ -193,6 +212,7 @@ const AdminOrdersPage = () => {
               <thead>
                 <tr className="bg-gray-100">
                   <th className="border px-4 py-2">№ замовлення</th>
+                  <th className="border px-4 py-2">Дата</th>
                   <th className="border px-4 py-2">Ім'я</th>
                   <th className="border px-4 py-2">Статус</th>
                   <th className="border px-4 py-2">Сума (грн)</th>
@@ -203,6 +223,9 @@ const AdminOrdersPage = () => {
                 {archivedOrders.map(order => (
                   <tr key={order._id} className="hover:bg-gray-50">
                     <td className="border px-4 py-2">{order.orderNumber || order._id}</td>
+                    <td className="border px-4 py-2">
+                      {new Date(order.createdAt).toLocaleString()}
+                    </td>
                     <td className="border px-4 py-2">{order.contactInfo?.name}</td>
                     <td className="border px-4 py-2">
                       <span
@@ -223,9 +246,15 @@ const AdminOrdersPage = () => {
                       </button>
                       <button
                         onClick={() => updateOrderStatus(order._id, 'pending')}
-                        className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 text-sm"
+                        className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 text-sm mb-2"
                       >
                         Повернути
+                      </button>
+                       <button
+                         onClick={() => deleteOrder(order._id)}
+                         className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm"
+                       >
+                         Видалити
                       </button>
                     </td>
                   </tr>
