@@ -1,13 +1,30 @@
 const express       = require('express');
 const mongoose      = require('mongoose');
 const cors          = require('cors');
+const helmet = require('helmet');
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3002;
 
+app.use(helmet());
 app.use(express.json());
 app.use(cors());
+
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'"], 
+      objectSrc: ["'none'"],
+      upgradeInsecureRequests: [],
+    },
+  })
+);
+app.use(helmet.referrerPolicy({ policy: 'strict-origin-when-cross-origin' }));
+app.use(helmet.noSniff());
+app.use(helmet.frameguard({ action: 'deny' }));
+
 
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('MongoDB connected'))
