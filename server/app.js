@@ -1,6 +1,6 @@
-const express       = require('express');
-const mongoose      = require('mongoose');
-const cors          = require('cors');
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
 const helmet = require('helmet');
 require('dotenv').config();
 
@@ -9,39 +9,38 @@ const PORT = process.env.PORT || 3002;
 
 app.use(express.json());
 app.use(cors());
-
 app.use(helmet());
 
+// Безопасные заголовки вручную
 app.use((req, res, next) => {
-  
-  res.setHeader('Content-Security-Policy', `default-src 'self'; 
-  script-src 'self'; 
-  style-src 'self' 'unsafe-inline'; 
-  img-src 'self' data:; 
-  font-src 'self'; 
-  connect-src 'self'; 
-  media-src 'self'; 
-  object-src 'none'; 
-  frame-ancestors 'none'; 
-  form-action 'self'; 
-  upgrade-insecure-requests;`);
-  
+  res.setHeader('Content-Security-Policy', 
+    "default-src 'self'; " +
+    "script-src 'self'; " +
+    "style-src 'self' 'unsafe-inline'; " +
+    "img-src 'self' data:; " +
+    "font-src 'self'; " +
+    "connect-src 'self'; " +
+    "media-src 'self'; " +
+    "object-src 'none'; " +
+    "frame-ancestors 'none'; " +
+    "form-action 'self'; " +
+    "upgrade-insecure-requests"
+  );
+
   res.setHeader('X-Content-Type-Options', 'nosniff');
-  
   res.setHeader('X-Frame-Options', 'DENY');
-  
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
-  
   res.setHeader('Cross-Origin-Resource-Policy', 'same-origin');
-  
   next();
 });
 
+// Подключение к MongoDB
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.error('MongoDB connection error:', err));
 
-  app.get('/', (req, res) => {
+// Корневой маршрут
+app.get('/', (req, res) => {
   res.send(`
     <!DOCTYPE html>
     <html lang="en">
@@ -58,14 +57,16 @@ mongoose.connect(process.env.MONGODB_URI)
   `);
 });
 
+// Роуты API
 app.use('/api/drinks', require('./routes/drinks'));
 app.use('/api/dishes', require('./routes/dishes'));
 app.use('/api/orders', require('./routes/orders'));
 app.use('/api/search', require('./routes/search'));
 app.use('/api/reservations', require('./routes/reservations'));
 app.use('/api/promos', require('./routes/promo'));
-app.use('/api/users', require('./routes/users')); 
+app.use('/api/users', require('./routes/users'));
 
+// Обработка ошибок
 app.use((err, req, res, next) => {
   const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
   res.status(statusCode).json({
@@ -74,6 +75,7 @@ app.use((err, req, res, next) => {
   });
 });
 
+// Запуск сервера
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
