@@ -7,24 +7,25 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3002;
 
-app.use(helmet());
 app.use(express.json());
 app.use(cors());
 
+app.use(helmet.frameguard({ action: 'deny' }));
+app.use(helmet.noSniff());
+app.use(helmet.referrerPolicy({ policy: 'strict-origin-when-cross-origin' }));
+
 app.use(
   helmet.contentSecurityPolicy({
+    useDefaults: true,
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'"], 
+      scriptSrc: ["'self'", "'unsafe-inline'", 'https:'],
       objectSrc: ["'none'"],
       upgradeInsecureRequests: [],
+      frameAncestors: ["'none'"],
     },
   })
 );
-app.use(helmet.referrerPolicy({ policy: 'strict-origin-when-cross-origin' }));
-app.use(helmet.noSniff());
-app.use(helmet.frameguard({ action: 'deny' }));
-
 
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('MongoDB connected'))
