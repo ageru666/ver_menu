@@ -11,7 +11,6 @@ app.use(express.json());
 app.use(cors());
 app.use(helmet());
 
-// Безопасные заголовки вручную
 app.use((req, res, next) => {
   res.setHeader('Content-Security-Policy', 
     "default-src 'self'; " +
@@ -34,12 +33,10 @@ app.use((req, res, next) => {
   next();
 });
 
-// Подключение к MongoDB
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.error('MongoDB connection error:', err));
 
-// Корневой маршрут
 app.get('/', (req, res) => {
   res.send(`
     <!DOCTYPE html>
@@ -57,7 +54,6 @@ app.get('/', (req, res) => {
   `);
 });
 
-// Роуты API
 app.use('/api/drinks', require('./routes/drinks'));
 app.use('/api/dishes', require('./routes/dishes'));
 app.use('/api/orders', require('./routes/orders'));
@@ -66,7 +62,6 @@ app.use('/api/reservations', require('./routes/reservations'));
 app.use('/api/promos', require('./routes/promo'));
 app.use('/api/users', require('./routes/users'));
 
-// Обработка ошибок
 app.use((err, req, res, next) => {
   const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
   res.status(statusCode).json({
@@ -75,7 +70,6 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Запуск сервера
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
