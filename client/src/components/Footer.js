@@ -5,7 +5,7 @@ const Footer = () => {
   const [navOpen, setNavOpen] = useState(false);
 
   return (
-    <footer className="bg-gray-900 text-gray-400 mt-auto">
+    <footer className="bg-gray-900 text-gray-200 mt-auto">
       <div className="
         container mx-auto px-4 py-1
         grid grid-cols-1 gap-4 

@@ -93,7 +93,11 @@ const Header = () => {
       <div className="bg-gray-800 w-full">
         <div className="container mx-auto px-4 py-2 flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <button className="text-white text-2xl md:hidden" onClick={toggleMobileMenu}>
+            <button
+              className="text-white text-2xl md:hidden"
+              onClick={toggleMobileMenu}
+              aria-label="Навігація"
+            >
               ≡
             </button>
             <Link
@@ -112,6 +116,7 @@ const Header = () => {
             <button
               onClick={() => navigate('/search')}
               className="text-white text-xl hover:text-gray-200 transition-colors no-underline"
+              aria-label="Пошук"
             >
               <FaSearch />
             </button>
@@ -128,7 +133,7 @@ const Header = () => {
             >
               <button
                 className="flex items-center justify-center text-white text-xl hover:text-gray-200 transition-colors no-underline"
-                onClick={() => window.innerWidth < 768 && setProfileOpen(!profileOpen)}
+                aria-label="Профіль" onClick={() => window.innerWidth < 768 && setProfileOpen(!profileOpen)}
               >
                 <FaUserCircle />
               </button>
@@ -159,6 +164,7 @@ const Header = () => {
               <Link
                 to="/cart"
                 className="text-white text-xl hover:text-gray-200 transition-colors no-underline"
+                aria-label="Кошик"
               >
                 <FaShoppingCart />
               </Link>
@@ -183,7 +189,9 @@ const Header = () => {
       <div className="bg-gray-700 text-gray-200 md:w-4/5 w-full mx-auto rounded-b py-1">
         <div className="md:hidden flex items-center justify-center">
           <h3 className="text-lg font-semibold mr-2">Меню</h3>
-          <button onClick={toggleCat} className="text-white text-xl">
+          <button onClick={toggleCat} className="text-white text-xl"
+            aria-label={catOpen ? 'Згорнути меню' : 'Показати меню'}
+            >
             {catOpen ? <FaAngleUp /> : <FaAngleDown />}
           </button>
         </div>

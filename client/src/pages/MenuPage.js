@@ -102,7 +102,7 @@ const MenuPage = ({ apiEndpoint, title }) => {
                 {!cartItem ? (
                   <button
                     onClick={() => addToCart(item)}
-                    className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition"
+                    className="w-full bg-blue-700 text-white py-2 rounded-md hover:bg-blue-600 transition"
                   >
                     Додати в кошик
                   </button>
