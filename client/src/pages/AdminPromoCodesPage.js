@@ -12,11 +12,10 @@ const AdminPromoCodesPage = () => {
     usageLimit: ''
   });
   const API = process.env.REACT_APP_API_URL || 'http://localhost:3002';
-
+  const token = localStorage.getItem('authToken');
   useEffect(() => {
   const fetchCodes = async () => {
     try {
-      const token = localStorage.getItem('authToken');
       const res = await fetch(`${API}/api/promos`, {
         headers: {
           Authorization: `Bearer ${token}`
