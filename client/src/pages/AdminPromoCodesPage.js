@@ -50,7 +50,10 @@ const AdminPromoCodesPage = () => {
       };
       const res = await fetch(`${API}/api/promos`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+         'Content-Type': 'application/json',
+         'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify(payload)
       });
       if (!res.ok) {
@@ -74,7 +77,12 @@ const AdminPromoCodesPage = () => {
   const handleDelete = async id => {
     if (!window.confirm('Видалити цей промокод?')) return;
     try {
-      const res = await fetch(`${API}/api/promos/${id}`, { method: 'DELETE' });
+      const res = await fetch(`${API}/api/promos/${id}`, { 
+          method: 'DELETE',
+          headers: {
+          'Authorization': `Bearer ${token}`
+         }
+         });
       if (!res.ok) {
         const err = await res.json();
         throw new Error(err.message);
